@@ -1,2 +1,14 @@
 @import "tailwindcss";
 @plugin "daisyui";
+
+/* SweetAlert Blue Success Icon */
+.swal2-success {
+  color: #3bcaf6 !important;
+  border-color: #3bcaf6 !important;
+}
+.swal2-success [class^=swal2-success-line] {
+  background-color: #3bcaf6 !important;
+}
+.swal2-success .swal2-success-ring {
+  border-color: rgba(59, 178, 246, 0.3) !important;
+}
