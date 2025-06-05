@@ -5,11 +5,12 @@ import Login from "../Auth/Login";
 import Register from "../Auth/Register";
 import PrivateRoute from "./PrivateRoute";
 import AddVolunteer from "../pages/AddVolunteer/AddVolunteer";
+import AllVolunteers from "../pages/AllVolunteers/AllVolunteers";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <MainLayout />, 
+    element: <MainLayout />,
     children: [
       {
         index: true,
@@ -22,6 +23,10 @@ export const router = createBrowserRouter([
             <AddVolunteer />
           </PrivateRoute>
         ),
+      },
+      {
+        path: "/volunteers",
+        element: <AllVolunteers />,
       },
       {
         path: "/login",

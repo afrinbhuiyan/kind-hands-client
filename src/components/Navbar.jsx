@@ -64,7 +64,7 @@ const Navbar = () => {
                 Home
               </NavLink>
               <NavLink
-                to="/all-posts"
+                to="/volunteers"
                 className={({ isActive }) =>
                   `px-4 py-2 text-sm font-medium rounded-md transition-all ${
                     isActive
@@ -87,7 +87,7 @@ const Navbar = () => {
                       }`
                     }
                   >
-                    add Volunteer
+                    Add Volunteer
                   </NavLink>
                   <NavLink
                     to="/manage-posts"
