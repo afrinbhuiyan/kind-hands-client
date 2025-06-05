@@ -17,10 +17,13 @@
     "framer-motion": "^12.16.0",
     "lottie-react": "^2.4.1",
     "react": "^19.1.0",
+    "react-datepicker": "^8.4.0",
     "react-dom": "^19.1.0",
     "react-icons": "^5.5.0",
     "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^7.6.1",
+    "reapop": "^4.2.2",
+    "sonner": "^2.0.5",
     "sweetalert2": "^11.22.0",
     "swiper": "^11.2.8"
   },

@@ -78,7 +78,7 @@ const Navbar = () => {
               {user && (
                 <>
                   <NavLink
-                    to="/add-post"
+                    to="/add-volunteer"
                     className={({ isActive }) =>
                       `px-4 py-2 text-sm font-medium rounded-md transition-all ${
                         isActive
@@ -87,7 +87,7 @@ const Navbar = () => {
                       }`
                     }
                   >
-                    Create Post
+                    add Volunteer
                   </NavLink>
                   <NavLink
                     to="/manage-posts"
