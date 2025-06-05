@@ -18,19 +18,23 @@ import { MdShareLocation } from "react-icons/md";
 import TopNav from "./TopNav";
 
 const Navbar = () => {
-  const { user, logOut } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const handleLogout = () => {
-    logOut()
-      .then(() => {})
-      .catch((error) => console.log(error));
+    logout()
+      .then(() => {
+        console.log("logOUT");
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
   };
 
   return (
     <header>
-      <TopNav/>
+      <TopNav />
       <nav className="bg-white sticky top-0 z-50 border-b border-[#6bd3f33d]">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center h-20">
@@ -104,7 +108,7 @@ const Navbar = () => {
             {/* Right Side Controls */}
             <div className="flex items-center space-x-4">
               {/* Search Button */}
-              <SearchBar/>
+              <SearchBar />
 
               {/* User Profile or Login */}
               {user ? (
