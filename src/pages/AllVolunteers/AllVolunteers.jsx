@@ -54,7 +54,7 @@ const AllVolunteers = () => {
                 <p><strong>Volunteers Needed:</strong> {post.volunteersNeeded}</p>
                 <p><strong>Deadline:</strong> {new Date(post.deadline).toLocaleDateString()}</p>
               </div>
-              <Link to={`/post/${post._id}`}>
+              <Link to={`/volunteer/${post._id}`}>
                 <button className="btn btn-sm btn-primary mt-4 w-full">View Details</button>
               </Link>
             </div>

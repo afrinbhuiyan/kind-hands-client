@@ -42,7 +42,7 @@ const VolunteerNowSection = () => {
                   <strong>Deadline:</strong>{" "}
                   {new Date(post.deadline).toLocaleDateString()}
                 </p>
-                <Link to={`/post/${post._id}`} className="btn btn-primary mt-2">
+                <Link to={`/volunteer/${post._id}`} className="btn btn-primary mt-2">
                   View Details
                 </Link>
               </div>
