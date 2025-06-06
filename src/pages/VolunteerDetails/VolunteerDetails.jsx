@@ -1,12 +1,13 @@
-// src/pages/VolunteerDetails.jsx
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
-console.log(motion)
+import VolunteerRequestModal from "../../components/Volunteer/VolunteerRequestModal";
+console.log(motion);
 
 const VolunteerDetails = () => {
   const { id } = useParams();
   const [post, setPost] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     fetch(`http://localhost:5000/posts/${id}`)
@@ -31,15 +32,39 @@ const VolunteerDetails = () => {
       <p className="mb-4 text-gray-600">{post.description}</p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <p><strong>Category:</strong> {post.category}</p>
-        <p><strong>Location:</strong> {post.location}</p>
-        <p><strong>Volunteers Needed:</strong> {post.volunteersNeeded}</p>
-        <p><strong>Deadline:</strong> {new Date(post.deadline).toLocaleDateString()}</p>
-        <p><strong>Organizer:</strong> {post.organizerName}</p>
-        <p><strong>Email:</strong> {post.organizerEmail}</p>
+        <p>
+          <strong>Category:</strong> {post.category}
+        </p>
+        <p>
+          <strong>Location:</strong> {post.location}
+        </p>
+        <p>
+          <strong>Volunteers Needed:</strong> {post.volunteersNeeded}
+        </p>
+        <p>
+          <strong>Deadline:</strong>{" "}
+          {new Date(post.deadline).toLocaleDateString()}
+        </p>
+        <p>
+          <strong>Organizer:</strong> {post.organizerName}
+        </p>
+        <p>
+          <strong>Email:</strong> {post.organizerEmail}
+        </p>
       </div>
 
-      <button className="btn btn-primary w-full">Be a Volunteer</button>
+      <button
+        onClick={() => setIsModalOpen(true)}
+        className="btn btn-primary w-full"
+      >
+        Be a Volunteer{" "}
+      </button>
+
+      <VolunteerRequestModal
+        post={post}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </motion.div>
   );
 };
