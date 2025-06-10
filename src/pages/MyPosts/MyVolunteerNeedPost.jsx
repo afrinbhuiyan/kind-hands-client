@@ -1,11 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../context/AuthContext";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
+import UpdatePostModal from "../../components/Volunteer/MyPost/UpdatePostModal";
+import { AuthContext } from "../../context/AuthContext";
 
 const MyVolunteerNeedPost = () => {
   const { user } = useContext(AuthContext);
   const [myPosts, setMyPosts] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPost, setSelectedPost] = useState(null);
 
   useEffect(() => {
     fetch(`http://localhost:5000/my-posts?email=${user?.email}`)
@@ -33,9 +36,12 @@ const MyVolunteerNeedPost = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await fetch(`http://localhost:5000/my-posts/${taskId}`, {
-            method: "DELETE",
-          });
+          const response = await fetch(
+            `http://localhost:5000/my-posts/${taskId}`,
+            {
+              method: "DELETE",
+            }
+          );
           const data = await response.json();
 
           if (response.ok) {
@@ -63,8 +69,30 @@ const MyVolunteerNeedPost = () => {
     });
   };
 
+  const openUpdateModal = (post) => {
+    setSelectedPost(post);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedPost(null);
+  };
+
   return (
     <div className="max-w-6xl mx-auto p-4">
+      <UpdatePostModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        postData={selectedPost}
+        refetch={() => {
+          // you can re-fetch your posts if needed
+          fetch(`http://localhost:5000/my-posts?email=${user.email}`)
+            .then((res) => res.json())
+            .then((data) => setMyPosts(data));
+        }}
+      />
+
       <h2 className="text-2xl font-semibold text-center mb-6 text-gray-800">
         My Volunteer Need Posts ({myPosts.length})
       </h2>
@@ -87,7 +115,10 @@ const MyVolunteerNeedPost = () => {
             </thead>
             <tbody>
               {myPosts.map((post) => (
-                <tr key={post._id} className="border-t hover:bg-gray-50 transition">
+                <tr
+                  key={post._id}
+                  className="border-t hover:bg-gray-50 transition"
+                >
                   <td className="py-3 px-4">{post.title}</td>
                   <td className="py-3 px-4">{post.category}</td>
                   <td className="py-3 px-4">{post.deadline}</td>
@@ -95,7 +126,7 @@ const MyVolunteerNeedPost = () => {
                   <td className="py-3 px-4 text-center">
                     <div className="flex justify-center gap-2">
                       <Link
-                        to={`/update-post/${post._id}`}
+                        onClick={() => openUpdateModal(post)}
                         className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md transition"
                       >
                         Update
