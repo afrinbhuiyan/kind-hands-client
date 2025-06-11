@@ -16,6 +16,7 @@ import { IoLogoInstagram } from "react-icons/io";
 import SearchBar from "./SearchBar";
 import { MdShareLocation } from "react-icons/md";
 import TopNav from "./TopNav";
+import ThemeToggle from "./ThemeToggle";
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
@@ -107,6 +108,7 @@ const Navbar = () => {
 
             {/* Right Side Controls */}
             <div className="flex items-center space-x-4">
+              <ThemeToggle/>
               {/* Search Button */}
               <SearchBar />
 

@@ -12,8 +12,13 @@ const VolunteerRequestModal = ({ post, isOpen, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const form = e.target;
+
     const requestData = {
       postId: post._id,
+      title: form.title.value,
+      category: form.category.value,
+      deadline: form.deadline.value,
       volunteerName: user?.displayName,
       volunteerEmail: user?.email,
       suggestion,
@@ -23,7 +28,7 @@ const VolunteerRequestModal = ({ post, isOpen, onClose }) => {
     console.log(requestData);
 
     try {
-      const res = await fetch("http://localhost:5000/volunteer-requests", {
+      const res = await fetch("http://localhost:5000/volunteer_requests", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -63,6 +68,7 @@ const VolunteerRequestModal = ({ post, isOpen, onClose }) => {
           />
           <input
             readOnly
+            name="title"
             value={post.title}
             className="input input-bordered col-span-2"
           />
@@ -73,6 +79,7 @@ const VolunteerRequestModal = ({ post, isOpen, onClose }) => {
           />
           <input
             readOnly
+            name="category"
             value={post.category}
             className="input input-bordered"
           />
@@ -88,6 +95,7 @@ const VolunteerRequestModal = ({ post, isOpen, onClose }) => {
           />
           <input
             readOnly
+            name="deadline"
             value={new Date(post.deadline).toLocaleDateString()}
             className="input input-bordered"
           />
