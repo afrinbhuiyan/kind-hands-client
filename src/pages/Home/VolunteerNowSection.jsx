@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { FaCalendarAlt, FaArrowRight } from 'react-icons/fa';
+import { FiArrowRight } from 'react-icons/fi';
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 console.log(motion)
@@ -14,67 +16,102 @@ const VolunteerNowSection = () => {
 
   return (
     <div className="container mx-auto px-4 py-10">
-      <motion.div
-        initial={{ opacity: 0, y: 60 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7 }}
+     <motion.div
+  initial={{ opacity: 0, y: 60 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.7 }}
+  className="py-12 px-4 sm:px-6 lg:px-8"
+>
+  <div className="max-w-7xl mx-auto">
+    <div className="text-center mb-12">
+      <motion.h2 
+        className="text-4xl font-bold text-[#024870] mb-4"
+        initial={{ y: -20 }}
+        animate={{ y: 0 }}
+        transition={{ delay: 0.2 }}
       >
-        <h2 className="text-3xl font-bold text-center mb-6">
-          Volunteer Needs Now
-        </h2>
-        <div className="grid md:grid-cols-3 gap-6">
-          {volunteerPosts.map((post) => (
-            <div
-              key={post._id}
-              className="card bg-white shadow-md rounded-lg overflow-hidden"
-            >
-              <img
-                src={post.thumbnail}
-                alt={post.title}
-                className="h-48 w-full object-cover"
-              />
-              <div className="p-4 space-y-2">
-                <h3 className="text-xl font-semibold">{post.title}</h3>
-                <p>
-                  <strong>Category:</strong> {post.category}
-                </p>
-                <p>
-                  <strong>Deadline:</strong>{" "}
-                  {new Date(post.deadline).toLocaleDateString()}
-                </p>
-                <Link to={`/volunteer/${post._id}`} className="btn btn-primary mt-2">
-                  View Details
-                </Link>
+        Volunteer Opportunities
+      </motion.h2>
+      <motion.p
+        className="text-xl text-gray-600 max-w-3xl mx-auto"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.4 }}
+      >
+        Make a difference in your community. Browse current volunteer needs and find the perfect opportunity to contribute.
+      </motion.p>
+    </div>
+
+    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {volunteerPosts.map((post) => (
+        <motion.div
+          key={post._id}
+          className="flex flex-col bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 border border-gray-100 h-full"
+          whileHover={{ y: -5 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="relative h-56 w-full overflow-hidden flex-shrink-0">
+            <img
+              src={post.thumbnail}
+              alt={post.title}
+              className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+            />
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#024870]/90 to-transparent p-4">
+              <span className="inline-block px-3 py-1 bg-white text-sm font-medium rounded-full text-[#024870]">
+                {post.category}
+              </span>
+            </div>
+          </div>
+
+          <div className="p-6 flex flex-col flex-grow">
+            <div className="mb-4">
+              <h3 className="text-xl font-bold text-gray-900 line-clamp-2 mb-2">{post.title}</h3>
+              <div className="flex items-center text-sm text-gray-500">
+                <FaCalendarAlt className="mr-2 text-[#024870]" />
+                <span>Deadline: {new Date(post.deadline).toLocaleDateString()}</span>
               </div>
             </div>
-          ))}
-        </div>
 
-        {/* 👇 See All Button */}
-        <div className="text-center mt-8">
-          <Link to="/volunteers" className="btn btn-outline btn-secondary">
-            See All
-          </Link>
-        </div>
-      </motion.div>
+            <p className="text-gray-600 line-clamp-3 mb-6 flex-grow">
+              {post.description || "Join us in making a difference in our community..."}
+            </p>
 
-      {/* 🟦 Extra Section 1 – About Volunteering */}
-      <motion.div
-        className="mt-20 bg-base-100 p-8 rounded-lg shadow-lg"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 1 }}
+            <div className="mt-auto">
+              <Link 
+                to={`/volunteer/${post._id}`} 
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#024870] hover:bg-[#01314d] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#024870] transition-colors duration-200 w-full justify-center"
+              >
+                View Details
+                <FiArrowRight className="ml-2" />
+              </Link>
+            </div>
+          </div>
+        </motion.div>
+      ))}
+    </div>
+
+    {/* See All Button */}
+    <motion.div 
+      className="text-center mt-12"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.6 }}
+    >
+      <Link 
+        to="/volunteers" 
+        className="inline-flex items-center px-6 py-3 border border-[#024870] text-base font-medium rounded-md text-[#024870] bg-white hover:bg-[#024870]/10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#024870] transition-all duration-200"
       >
-        <h2 className="text-2xl font-bold mb-4">Why Volunteer?</h2>
-        <p className="text-gray-600">
-          Volunteering connects you to others, boosts your confidence, and
-          brings purpose to your life. Join thousands of volunteers making an
-          impact in their community today.
-        </p>
-      </motion.div>
+        Browse All Opportunities
+        <FaArrowRight className="ml-2" />
+      </Link>
+    </motion.div>
+  </div>
+</motion.div>
 
       {/* 🟪 Extra Section 2 – How It Works */}
-      <motion.div
+      {/* <motion.div
         className="mt-12 bg-base-200 p-8 rounded-lg shadow"
         initial={{ x: -100, opacity: 0 }}
         whileInView={{ x: 0, opacity: 1 }}
@@ -87,7 +124,7 @@ const VolunteerNowSection = () => {
           <li>3. Sign up or contact the organizer</li>
           <li>4. Make a positive impact!</li>
         </ul>
-      </motion.div>
+      </motion.div> */}
     </div>
   );
 };
