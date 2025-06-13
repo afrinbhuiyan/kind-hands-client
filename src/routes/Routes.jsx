@@ -8,11 +8,13 @@ import AddVolunteer from "../pages/AddVolunteer/AddVolunteer";
 import AllVolunteers from "../pages/AllVolunteers/AllVolunteers";
 import VolunteerDetails from "../pages/VolunteerDetails/VolunteerDetails";
 import MyPosts from "../pages/MyPosts/MyPosts";
+import ErrorPage from "../pages/ErrorPage/ErrorPage";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <MainLayout />,
+    errorElement: <ErrorPage></ErrorPage>,
     children: [
       {
         index: true,
