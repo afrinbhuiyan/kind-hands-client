@@ -6,9 +6,11 @@ import { FiHome, FiRefreshCw } from "react-icons/fi";
 import Lottie from "lottie-react";
 import errorAnimation from "../../assets/error.json";
 import cloudAnimation from "../../assets/cloudAnimation.json";
+import useDynamicTitle from "../../hooks/useDynamicTitle";
 
 const ErrorPage = () => {
-  // Cloud component with realistic parameters
+  useDynamicTitle("Error page")
+  
   const Cloud = ({ size, opacity, speed, initialX, initialY, delay }) => {
     const width = size;
     const height = size * 0.5;
@@ -38,7 +40,7 @@ const ErrorPage = () => {
     );
   };
 
-  // Cloud configuration array
+ 
   const clouds = [
     {
       size: 200,

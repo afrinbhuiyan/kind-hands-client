@@ -2,33 +2,47 @@ import React, { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { toast } from "sonner";
 import Swal from "sweetalert2";
+import { motion, AnimatePresence } from "framer-motion";
+console.log(motion)
+import {
+  FaHandsHelping,
+  FaUser,
+  FaEnvelope,
+  FaCalendarAlt,
+  FaMapMarkerAlt,
+  FaUsers,
+  FaTimes
+} from "react-icons/fa";
 
 const VolunteerRequestModal = ({ post, isOpen, onClose }) => {
   const { user } = useContext(AuthContext);
   const [suggestion, setSuggestion] = useState("");
-
-  if (!isOpen || !post) return null;
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const form = e.target;
+    setIsSubmitting(true);
 
     const requestData = {
       postId: post._id,
-      title: form.title.value,
-      category: form.category.value,
-      deadline: form.deadline.value,
+      title: post.title,
+      description: post.description,
+      category: post.category,
+      location: post.location,
+      volunteersNeeded: post.volunteersNeeded,
+      deadline: post.deadline,
+      organizerName: post.organizerName,
+      organizerEmail: post.organizerEmail,
       volunteerName: user?.displayName,
       volunteerEmail: user?.email,
       suggestion,
       status: "requested",
+      createdAt: new Date()
     };
 
-    console.log(requestData);
-
     try {
-      const res = await fetch("http://localhost:5000/volunteer_requests", {
+      // First, create the volunteer request
+      const requestRes = await fetch("http://localhost:5000/volunteer_requests", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -36,110 +50,231 @@ const VolunteerRequestModal = ({ post, isOpen, onClose }) => {
         body: JSON.stringify(requestData),
       });
 
-      const result = await res.json();
-      console.log(result);
+      const requestResult = await requestRes.json();
 
-      if (result.insertedId) {
-        Swal.fire({
-          title: "Success!",
-          text: "Volunteer Post Added Successfully!",
-          icon: "success",
-          confirmButtonText: "OK",
+      if (requestResult.insertedId) {
+
+        const updateRes = await fetch(`http://localhost:5000/posts/${post._id}/decrement-volunteers`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
         });
-        onClose();
+
+        const updateResult = await updateRes.json();
+
+        if (updateResult.modifiedCount === 1) {
+          Swal.fire({
+            title: "Request Sent!",
+            text: "Your volunteer request has been submitted successfully.",
+            icon: "success",
+            confirmButtonColor: "#024870",
+          });
+          onClose();
+          setSuggestion("");
+        } else {
+          toast.error("Failed to update volunteer count.");
+        }
       } else {
-        toast.error("Something went wrong.");
+        toast.error("Failed to send request. Please try again.");
       }
     } catch (error) {
       console.error(error);
-      toast.error("Failed to send request.");
+      toast.error("An error occurred while submitting your request.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
+  if (!isOpen || !post) return null;
+
   return (
-    <div className="fixed inset-0 bg-[#111111a1] bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-lg w-full max-w-xl">
-        <h2 className="text-2xl font-bold mb-4">Be a Volunteer</h2>
-        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
-          <input
-            readOnly
-            value={post.thumbnail}
-            className="input input-bordered col-span-2"
-          />
-          <input
-            readOnly
-            name="title"
-            value={post.title}
-            className="input input-bordered col-span-2"
-          />
-          <textarea
-            readOnly
-            value={post.description}
-            className="textarea textarea-bordered col-span-2"
-          />
-          <input
-            readOnly
-            name="category"
-            value={post.category}
-            className="input input-bordered"
-          />
-          <input
-            readOnly
-            value={post.location}
-            className="input input-bordered"
-          />
-          <input
-            readOnly
-            value={post.volunteersNeeded}
-            className="input input-bordered"
-          />
-          <input
-            readOnly
-            name="deadline"
-            value={new Date(post.deadline).toLocaleDateString()}
-            className="input input-bordered"
-          />
-          <input
-            readOnly
-            value={post.organizerName}
-            className="input input-bordered"
-          />
-          <input
-            readOnly
-            value={post.organizerEmail}
-            className="input input-bordered"
-          />
-          <input
-            readOnly
-            value={user?.displayName}
-            className="input input-bordered"
-          />
-          <input
-            readOnly
-            value={user?.email}
-            className="input input-bordered"
-          />
-
-          <textarea
-            placeholder="Your suggestion"
-            className="textarea textarea-bordered col-span-2"
-            value={suggestion}
-            onChange={(e) => setSuggestion(e.target.value)}
-          ></textarea>
-
-          <button type="submit" className="btn btn-primary col-span-2">
-            Request
-          </button>
-          <button
-            onClick={onClose}
-            type="button"
-            className="btn btn-secondary col-span-2"
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          className="fixed inset-0 bg-[#11111148] bg-opacity-50 flex justify-center items-center z-50 p-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          <motion.div
+            className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+            initial={{ scale: 0.95, y: 20 }}
+            animate={{ scale: 1, y: 0 }}
+            exit={{ scale: 0.95, y: 20 }}
           >
-            Cancel
-          </button>
-        </form>
-      </div>
-    </div>
+            <div className="sticky top-0 bg-white dark:bg-gray-800 p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
+                <FaHandsHelping className="text-[#024870] dark:text-[#6bd3f3] mr-2" />
+                Volunteer Application
+              </h2>
+              <button
+                onClick={onClose}
+                className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+                aria-label="Close modal"
+              >
+                <FaTimes className="text-xl" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit} className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                {/* Opportunity Details */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white border-b pb-2">
+                    Opportunity Details
+                  </h3>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Post Title</label>
+                      <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-gray-900 dark:text-white">
+                        {post.title}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Description</label>
+                      <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-gray-900 dark:text-white">
+                        {post.description}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Category</label>
+                        <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-gray-900 dark:text-white">
+                          {post.category}
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Location</label>
+                        <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-gray-900 dark:text-white flex items-center">
+                          <FaMapMarkerAlt className="mr-2 text-sm" /> {post.location}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Volunteers Needed</label>
+                        <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-gray-900 dark:text-white flex items-center">
+                          <FaUsers className="mr-2 text-sm" /> {post.volunteersNeeded}
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Deadline</label>
+                        <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-gray-900 dark:text-white flex items-center">
+                          <FaCalendarAlt className="mr-2 text-sm" /> 
+                          {new Date(post.deadline).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Organizer & Volunteer Info */}
+                <div className="space-y-4">
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white border-b pb-2">
+                      Organizer Information
+                    </h3>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Organizer Name</label>
+                      <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-gray-900 dark:text-white">
+                        {post.organizerName}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Organizer Email</label>
+                      <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-gray-900 dark:text-white">
+                        {post.organizerEmail}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white border-b pb-2">
+                      Your Information
+                    </h3>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Your Name</label>
+                      <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-gray-900 dark:text-white">
+                        {user?.displayName}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Your Email</label>
+                      <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-gray-900 dark:text-white">
+                        {user?.email}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Suggestion Field */}
+              <div className="mb-6">
+                <label htmlFor="suggestion" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Why are you interested in this opportunity? (Optional)
+                </label>
+                <textarea
+                  id="suggestion"
+                  placeholder="Tell us about your skills, experience, or why you'd like to volunteer..."
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#024870] focus:border-[#024870] dark:focus:ring-[#6bd3f3] dark:focus:border-[#6bd3f3] dark:bg-gray-700 dark:text-white"
+                  rows={4}
+                  value={suggestion}
+                  onChange={(e) => setSuggestion(e.target.value)}
+                />
+              </div>
+
+              {/* Status (hidden) */}
+              <input type="hidden" name="status" value="requested" />
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  disabled={isSubmitting}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-3 bg-gradient-to-r from-[#024870] to-[#6bd3f3] text-white rounded-lg hover:from-[#01314d] hover:to-[#4ac1e8] transition-all shadow-md hover:shadow-lg flex items-center justify-center"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Submitting...
+                    </>
+                  ) : (
+                    <>
+                      <FaHandsHelping className="mr-2" />
+                      Submit Request
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 

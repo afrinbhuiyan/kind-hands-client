@@ -8,6 +8,7 @@ import {
   FaCalendarAlt,
   FaArrowRight,
 } from "react-icons/fa";
+import useDynamicTitle from "../../hooks/useDynamicTitle";
 
 // Custom Spinner
 const Spinner = () => (
@@ -22,6 +23,7 @@ const AllVolunteers = () => {
   const [isTableLayout, setIsTableLayout] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
+  useDynamicTitle("Opportunities");
 
   useEffect(() => {
     fetch("http://localhost:5000/posts")

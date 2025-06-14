@@ -12,7 +12,6 @@ import { motion } from "framer-motion";
 console.log(motion)
 import SubscribeButton from "./SubscribeButton";
 
-// Animation variants
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -66,7 +65,7 @@ const Footer = () => {
                 animate={{ rotate: [0, 10, -10, 0] }}
                 transition={{ duration: 1, repeat: Infinity, repeatDelay: 5 }}
               >
-                <FaHandsHelping className="text-3xl text-[#6bd3f3] mr-2" />
+                <img className="w-10 mr-2" src="public/logo.png" alt="" />
               </motion.div>
               <h3 className="text-2xl font-bold">
                 KIND<span className="text-[#6bd3f3]">HANDS</span>

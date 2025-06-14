@@ -74,10 +74,6 @@ const VolunteerNowSection = () => {
               </div>
             </div>
 
-            <p className="text-gray-600 line-clamp-3 mb-6 flex-grow">
-              {post.description || "Join us in making a difference in our community..."}
-            </p>
-
             <div className="mt-auto">
               <Link 
                 to={`/volunteer/${post._id}`} 
