@@ -88,14 +88,12 @@ const Banner = () => {
             </div>
           </SwiperSlide>
         ))}
-        
-        {/* Custom Navigation Arrows */}
+
         <div className="swiper-button-next !text-white bg-[#024870] !w-12 !h-12 !right-4 after:!text-2xl after:!font-bold"></div>
         <div className="swiper-button-prev !text-white bg-[#024870] !w-12 !h-12 !left-4 after:!text-2xl after:!font-bold"></div>
       </Swiper>
       
-      {/* Add this to your global CSS or Tailwind config for animations */}
-      <style jsx global>{`
+       <style>{`
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(20px); }
           to { opacity: 1; transform: translateY(0); }

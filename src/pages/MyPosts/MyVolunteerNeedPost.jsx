@@ -6,6 +6,9 @@ import UpdatePostModal from "../../components/Volunteer/MyPost/UpdatePostModal";
 import { AuthContext } from "../../context/AuthContext";
 import { motion } from "framer-motion";
 import { FiActivity, FiDatabase, FiMail, FiTarget } from "react-icons/fi";
+import useDynamicTitle from "../../hooks/useDynamicTitle";
+import Spinner from "../../components/Spinner";
+import { deletePostById, getMyPosts } from "../../services/api/postApi";
 console.log(motion);
 
 const MyVolunteerNeedPost = () => {
@@ -14,15 +17,14 @@ const MyVolunteerNeedPost = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  useDynamicTitle("Add Volunteer Need Post");
 
   useEffect(() => {
     setIsLoading(true);
-    fetch(`http://localhost:5000/my-posts?email=${user?.email}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setMyPosts(data);
-        setIsLoading(false);
-      });
+    getMyPosts(user.email).then((data) => {
+      setMyPosts(data);
+      setIsLoading(false);
+    });
   }, [user?.email]);
 
   const handleDelete = (taskId) => {
@@ -51,27 +53,17 @@ const MyVolunteerNeedPost = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await fetch(
-            `http://localhost:5000/my-posts/${taskId}`,
-            {
-              method: "DELETE",
-            }
-          );
-          const data = await response.json();
+          await deletePostById(taskId);
 
-          if (response.ok) {
-            Swal.fire({
-              title: "Deleted!",
-              text: "The post has been removed.",
-              icon: "success",
-              background: "#F5F4F1",
-              timer: 2000,
-              showConfirmButton: false,
-            });
-            setMyPosts((prev) => prev.filter((post) => post._id !== taskId));
-          } else {
-            throw new Error(data.message || "Failed to delete post");
-          }
+          Swal.fire({
+            title: "Deleted!",
+            text: "The post has been removed.",
+            icon: "success",
+            background: "#F5F4F1",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+          setMyPosts((prev) => prev.filter((post) => post._id !== taskId));
         } catch (error) {
           Swal.fire({
             title: "Error!",
@@ -94,17 +86,20 @@ const MyVolunteerNeedPost = () => {
     setSelectedPost(null);
   };
 
+  const refetchMyPosts = () => {
+    if (!user?.email) return;
+    getMyPosts(user.email)
+      .then((data) => setMyPosts(data))
+      .catch((err) => console.error(err));
+  };
+
   return (
     <div className="max-w-6xl mx-auto p-4">
       <UpdatePostModal
         isOpen={isModalOpen}
         onClose={closeModal}
         postData={selectedPost}
-        refetch={() => {
-          fetch(`http://localhost:5000/my-posts?email=${user.email}`)
-            .then((res) => res.json())
-            .then((data) => setMyPosts(data));
-        }}
+        refetch={refetchMyPosts}
       />
 
       <motion.div
@@ -113,7 +108,6 @@ const MyVolunteerNeedPost = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        {/* User Profile */}
         <div className="flex items-center gap-4 mb-8">
           <motion.div
             className="relative"
@@ -181,9 +175,7 @@ const MyVolunteerNeedPost = () => {
       </motion.div>
 
       {isLoading ? (
-        <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-        </div>
+        <Spinner />
       ) : myPosts.length === 0 ? (
         <motion.div
           initial={{ opacity: 0 }}

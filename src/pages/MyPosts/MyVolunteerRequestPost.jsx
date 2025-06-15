@@ -3,18 +3,25 @@ import { AuthContext } from "../../context/AuthContext";
 import Swal from "sweetalert2";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-console.log(motion)
+import useDynamicTitle from "../../hooks/useDynamicTitle";
+import Spinner from "../../components/Spinner";
+import {
+  deleteVolunteerRequestById,
+  getMyVolunteerRequests,
+} from "../../services/api/VolunteerRequestApi";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+console.log(motion);
 
 const MyVolunteerRequestPost = () => {
   const { user } = useContext(AuthContext);
   const [myRequests, setMyRequests] = useState([]);
   const [loading, setLoading] = useState(true);
+  useDynamicTitle("Manage My Post");
 
-  // Fetch requests
   useEffect(() => {
     if (user?.email) {
-      fetch(`http://localhost:5000/my-volunteer-requests?email=${user.email}`)
-        .then((res) => res.json())
+      getMyVolunteerRequests(user.email)
         .then((data) => {
           setMyRequests(data);
           setLoading(false);
@@ -26,7 +33,6 @@ const MyVolunteerRequestPost = () => {
     }
   }, [user?.email]);
 
-  // Cancel handler
   const handleCancel = async (id) => {
     const confirm = await Swal.fire({
       title: "Cancel Volunteer Request?",
@@ -41,20 +47,9 @@ const MyVolunteerRequestPost = () => {
 
     if (confirm.isConfirmed) {
       try {
-        const res = await fetch(
-          `http://localhost:5000/volunteer-requests/${id}`,
-          {
-            method: "DELETE",
-          }
-        );
-
-        const result = await res.json();
-        if (result.deletedCount > 0) {
-          toast.success("Request cancelled successfully.");
-          setMyRequests((prev) => prev.filter((req) => req._id !== id));
-        } else {
-          toast.error("Failed to cancel request.");
-        }
+        await deleteVolunteerRequestById(id);
+        toast.success("Request cancelled successfully.");
+        setMyRequests((prev) => prev.filter((req) => req._id !== id));
       } catch (error) {
         console.error(error);
         toast.error("Something went wrong.");
@@ -62,7 +57,7 @@ const MyVolunteerRequestPost = () => {
     }
   };
 
-  if (loading) return <p className="text-center mt-10">Loading...</p>;
+  if (loading) return <Spinner />;
 
   return (
     <motion.div
@@ -81,6 +76,13 @@ const MyVolunteerRequestPost = () => {
           total
         </p>
       </div>
+      <ToastContainer />
+      <button
+        onClick={() => toast.success("Test toast works!")}
+        className="p-2 bg-blue-500 text-white"
+      >
+        Show Toast
+      </button>
 
       {myRequests.length === 0 ? (
         <motion.div

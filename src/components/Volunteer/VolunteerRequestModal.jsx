@@ -3,84 +3,62 @@ import { AuthContext } from "../../context/AuthContext";
 import { toast } from "sonner";
 import Swal from "sweetalert2";
 import { motion, AnimatePresence } from "framer-motion";
-console.log(motion)
 import {
   FaHandsHelping,
-  FaUser,
-  FaEnvelope,
   FaCalendarAlt,
   FaMapMarkerAlt,
   FaUsers,
-  FaTimes
+  FaTimes,
+  FaImage,
 } from "react-icons/fa";
+import { createVolunteerRequest } from "../../services/api/VolunteerRequestApi";
 
-const VolunteerRequestModal = ({ post, isOpen, onClose }) => {
+const VolunteerRequestModal = ({ post, isOpen, onClose, onSuccess }) => {
   const { user } = useContext(AuthContext);
   const [suggestion, setSuggestion] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!post?._id) {
+      toast.error("Invalid post information");
+      return;
+    }
+
     setIsSubmitting(true);
-
-    const requestData = {
-      postId: post._id,
-      title: post.title,
-      description: post.description,
-      category: post.category,
-      location: post.location,
-      volunteersNeeded: post.volunteersNeeded,
-      deadline: post.deadline,
-      organizerName: post.organizerName,
-      organizerEmail: post.organizerEmail,
-      volunteerName: user?.displayName,
-      volunteerEmail: user?.email,
-      suggestion,
-      status: "requested",
-      createdAt: new Date()
-    };
-
     try {
-      // First, create the volunteer request
-      const requestRes = await fetch("http://localhost:5000/volunteer_requests", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestData),
+      const requestData = {
+        postId: post._id,
+        title: post.title,
+        description: post.description,
+        thumbnail: post.thumbnail,
+        category: post.category,
+        location: post.location,
+        volunteersNeeded: post.volunteersNeeded,
+        deadline: post.deadline,
+        organizerName: post.organizerName,
+        organizerEmail: post.organizerEmail,
+        volunteerName: user?.displayName,
+        volunteerEmail: user?.email,
+        suggestion,
+        status: "requested",
+        createdAt: new Date(),
+      };
+
+      await createVolunteerRequest(requestData);
+
+      await onSuccess();
+
+      Swal.fire({
+        title: "Request Sent!",
+        text: "Your volunteer request has been submitted successfully.",
+        icon: "success",
+        confirmButtonColor: "#024870",
       });
-
-      const requestResult = await requestRes.json();
-
-      if (requestResult.insertedId) {
-
-        const updateRes = await fetch(`http://localhost:5000/posts/${post._id}/decrement-volunteers`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        const updateResult = await updateRes.json();
-
-        if (updateResult.modifiedCount === 1) {
-          Swal.fire({
-            title: "Request Sent!",
-            text: "Your volunteer request has been submitted successfully.",
-            icon: "success",
-            confirmButtonColor: "#024870",
-          });
-          onClose();
-          setSuggestion("");
-        } else {
-          toast.error("Failed to update volunteer count.");
-        }
-      } else {
-        toast.error("Failed to send request. Please try again.");
-      }
+      onClose();
+      setSuggestion("");
     } catch (error) {
-      console.error(error);
-      toast.error("An error occurred while submitting your request.");
+      toast.error(error.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -119,22 +97,74 @@ const VolunteerRequestModal = ({ post, isOpen, onClose }) => {
 
             <form onSubmit={handleSubmit} className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                {/* Opportunity Details */}
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white border-b pb-2">
                     Opportunity Details
                   </h3>
-                  
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                      Thumbnail Preview
+                    </label>
+                    <div className="relative">
+                      {post.thumbnail ? (
+                        <div className="group relative">
+                          <div className="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                            <div className="flex-shrink-0 h-10 w-10 rounded overflow-hidden">
+                              <img
+                                src={post.thumbnail}
+                                alt="Thumbnail preview"
+                                className="h-full w-full object-cover"
+                                onError={(e) => {
+                                  e.target.onerror = null;
+                                  e.target.src =
+                                    "https://via.placeholder.com/100?text=No+Image";
+                                }}
+                              />
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <input
+                                type="text"
+                                value={post.thumbnail}
+                                readOnly
+                                className="block w-full truncate bg-transparent text-sm text-gray-900 dark:text-white border-none focus:ring-0 p-0"
+                              />
+                            </div>
+                          </div>
+                          <a
+                            href={post.thumbnail}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="absolute inset-0 opacity-0 group-hover:opacity-100 flex items-center justify-center bg-black/50 transition-opacity"
+                          >
+                            <span className="text-white text-sm font-medium">
+                              View Full Image
+                            </span>
+                          </a>
+                        </div>
+                      ) : (
+                        <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-gray-400 dark:text-gray-500 flex items-center">
+                          <FaImage className="mr-2" />
+                          No thumbnail available
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Post Title</label>
+                      <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                        Post Title
+                      </label>
                       <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-gray-900 dark:text-white">
                         {post.title}
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Description</label>
+                      <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                        Description
+                      </label>
                       <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-gray-900 dark:text-white">
                         {post.description}
                       </div>
@@ -142,34 +172,44 @@ const VolunteerRequestModal = ({ post, isOpen, onClose }) => {
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Category</label>
+                        <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                          Category
+                        </label>
                         <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-gray-900 dark:text-white">
                           {post.category}
                         </div>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Location</label>
+                        <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                          Location
+                        </label>
                         <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-gray-900 dark:text-white flex items-center">
-                          <FaMapMarkerAlt className="mr-2 text-sm" /> {post.location}
+                          <FaMapMarkerAlt className="mr-2 text-sm" />{" "}
+                          {post.location}
                         </div>
                       </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Volunteers Needed</label>
+                        <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                          Volunteers Needed
+                        </label>
                         <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-gray-900 dark:text-white flex items-center">
-                          <FaUsers className="mr-2 text-sm" /> {post.volunteersNeeded}
+                          <FaUsers className="mr-2 text-sm" />{" "}
+                          {post.volunteersNeeded}
                         </div>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Deadline</label>
+                        <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                          Deadline
+                        </label>
                         <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-gray-900 dark:text-white flex items-center">
-                          <FaCalendarAlt className="mr-2 text-sm" /> 
-                          {new Date(post.deadline).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric'
+                          <FaCalendarAlt className="mr-2 text-sm" />
+                          {new Date(post.deadline).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
                           })}
                         </div>
                       </div>
@@ -177,22 +217,25 @@ const VolunteerRequestModal = ({ post, isOpen, onClose }) => {
                   </div>
                 </div>
 
-                {/* Organizer & Volunteer Info */}
                 <div className="space-y-4">
                   <div className="space-y-4">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white border-b pb-2">
                       Organizer Information
                     </h3>
-                    
+
                     <div>
-                      <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Organizer Name</label>
+                      <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                        Organizer Name
+                      </label>
                       <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-gray-900 dark:text-white">
                         {post.organizerName}
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Organizer Email</label>
+                      <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                        Organizer Email
+                      </label>
                       <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-gray-900 dark:text-white">
                         {post.organizerEmail}
                       </div>
@@ -203,16 +246,20 @@ const VolunteerRequestModal = ({ post, isOpen, onClose }) => {
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white border-b pb-2">
                       Your Information
                     </h3>
-                    
+
                     <div>
-                      <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Your Name</label>
+                      <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                        Your Name
+                      </label>
                       <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-gray-900 dark:text-white">
                         {user?.displayName}
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Your Email</label>
+                      <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                        Your Email
+                      </label>
                       <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-gray-900 dark:text-white">
                         {user?.email}
                       </div>
@@ -221,9 +268,11 @@ const VolunteerRequestModal = ({ post, isOpen, onClose }) => {
                 </div>
               </div>
 
-              {/* Suggestion Field */}
               <div className="mb-6">
-                <label htmlFor="suggestion" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label
+                  htmlFor="suggestion"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                >
                   Why are you interested in this opportunity? (Optional)
                 </label>
                 <textarea
@@ -236,7 +285,6 @@ const VolunteerRequestModal = ({ post, isOpen, onClose }) => {
                 />
               </div>
 
-              {/* Status (hidden) */}
               <input type="hidden" name="status" value="requested" />
 
               {/* Action Buttons */}
@@ -256,9 +304,25 @@ const VolunteerRequestModal = ({ post, isOpen, onClose }) => {
                 >
                   {isSubmitting ? (
                     <>
-                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      <svg
+                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
                       </svg>
                       Submitting...
                     </>

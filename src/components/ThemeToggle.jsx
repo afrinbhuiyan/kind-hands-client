@@ -17,7 +17,6 @@ const ThemeToggle = () => {
 
   return (
     <div className="relative">
-      {/* Background gradient that changes with theme */}
       <motion.div
         className="absolute inset-0 rounded-full opacity-10"
         animate={{
@@ -27,8 +26,6 @@ const ThemeToggle = () => {
         }}
         transition={{ duration: 0.5 }}
       />
-      
-      {/* Main toggle button */}
       <motion.button
         onClick={toggleTheme}
         aria-label={`Toggle ${theme === "light" ? "dark" : "light"} mode`}
@@ -40,7 +37,6 @@ const ThemeToggle = () => {
             : 'linear-gradient(145deg, #1e293b, #0f172a)',
         }}
       >
-        {/* Sun and moon track */}
         <motion.div
           className="absolute inset-0 flex items-center justify-between px-2"
           initial={false}
@@ -52,7 +48,6 @@ const ThemeToggle = () => {
           <FiMoon className="text-[#32728f] text-sm" />
         </motion.div>
 
-        {/* Toggle handle with celestial body */}
         <motion.div
           className="absolute top-1/2 w-6 h-6 rounded-full -translate-y-1/2 flex items-center justify-center"
           animate={{
@@ -70,7 +65,6 @@ const ThemeToggle = () => {
             damping: 20 
           }}
         >
-          {/* Celestial body details */}
           <AnimatePresence mode="wait">
             {theme === 'light' ? (
               <motion.div
@@ -125,7 +119,6 @@ const ThemeToggle = () => {
           </AnimatePresence>
         </motion.div>
 
-        {/* Stars that appear in dark mode */}
         <AnimatePresence>
           {theme === 'dark' && (
             <>
@@ -158,7 +151,6 @@ const ThemeToggle = () => {
         </AnimatePresence>
       </motion.button>
 
-      {/* Ambient light effect */}
       <motion.div
         className="absolute inset-0 rounded-full pointer-events-none"
         animate={{

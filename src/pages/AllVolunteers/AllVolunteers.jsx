@@ -1,21 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-console.log(motion);
 import {
   FaMapMarkerAlt,
   FaUsers,
   FaCalendarAlt,
   FaArrowRight,
+  FaHandsHelping,
+  FaSearch,
+  FaCheck,
+  FaTh,
+  FaList,
+  FaFrown,
+  FaRedo,
+  FaChevronRight,
+  FaRegClock,
+  FaRegUser,
+  FaRegCalendarAlt,
+  FaRegMap,
+  FaRegSmile,
+  FaRegSadTear,
 } from "react-icons/fa";
 import useDynamicTitle from "../../hooks/useDynamicTitle";
-
-// Custom Spinner
-const Spinner = () => (
-  <div className="flex justify-center items-center h-40">
-    <div className="w-12 h-12 border-4 border-dashed rounded-full animate-spin border-blue-500"></div>
-  </div>
-);
+import Spinner from "../../components/Spinner";
+import { allVolunteersPromise } from "../../services/api/volunteersApi";
+import { searchPostsByTitle } from "../../services/api/searchPostsByTitle";
 
 const AllVolunteers = () => {
   const [posts, setPosts] = useState([]);
@@ -26,8 +35,7 @@ const AllVolunteers = () => {
   useDynamicTitle("Opportunities");
 
   useEffect(() => {
-    fetch("http://localhost:5000/posts")
-      .then((res) => res.json())
+    allVolunteersPromise()
       .then((data) => {
         setPosts(data);
         setLoading(false);
@@ -41,10 +49,7 @@ const AllVolunteers = () => {
   const handleSearch = async (term) => {
     setLoading(true);
     try {
-      const response = await fetch(
-        `http://localhost:5000/posts/search?title=${term}`
-      );
-      const data = await response.json();
+      const data = await searchPostsByTitle(term);
       setPosts(data);
     } catch (error) {
       console.error("Search error:", error);
@@ -59,13 +64,12 @@ const AllVolunteers = () => {
       ? posts
       : posts.filter((post) => post.category === selectedCategory);
 
-  // Get featured posts (urgent or with approaching deadlines)
   const featuredPosts = posts
     .filter((post) => new Date(post.deadline) > new Date())
     .sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
-    .slice(0, 3);
+    .slice(0, 2);
 
-  if (loading) return <Spinner />;
+  if (loading) return <Spinner/>
 
   return (
     <motion.div
@@ -73,37 +77,12 @@ const AllVolunteers = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
     >
-      {/* 🚨 New Featured Volunteer Opportunities Section */}
       {featuredPosts.length > 0 && (
         <div className="mb-16 relative">
-          {/* Decorative elements */}
           <div className="absolute -top-6 -left-6 w-24 h-24 bg-blue-100 rounded-full opacity-30"></div>
           <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-blue-200 rounded-full opacity-20"></div>
 
           <div className="relative overflow-hidden">
-            {/* Floating decorative dots */}
-            <div className="absolute top-0 right-0 w-32 h-32 opacity-10">
-              <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="30" cy="30" r="6" fill="currentColor" />
-                <circle cx="80" cy="30" r="6" fill="currentColor" />
-                <circle cx="130" cy="30" r="6" fill="currentColor" />
-                <circle cx="180" cy="30" r="6" fill="currentColor" />
-                <circle cx="30" cy="80" r="6" fill="currentColor" />
-                <circle cx="80" cy="80" r="6" fill="currentColor" />
-                <circle cx="130" cy="80" r="6" fill="currentColor" />
-                <circle cx="180" cy="80" r="6" fill="currentColor" />
-                <circle cx="30" cy="130" r="6" fill="currentColor" />
-                <circle cx="80" cy="130" r="6" fill="currentColor" />
-                <circle cx="130" cy="130" r="6" fill="currentColor" />
-                <circle cx="180" cy="130" r="6" fill="currentColor" />
-                <circle cx="30" cy="180" r="6" fill="currentColor" />
-                <circle cx="80" cy="180" r="6" fill="currentColor" />
-                <circle cx="130" cy="180" r="6" fill="currentColor" />
-                <circle cx="180" cy="180" r="6" fill="currentColor" />
-              </svg>
-            </div>
-
-            {/* Header with decorative icon */}
             <div className="flex items-center mb-6">
               <div>
                 <h2 className="text-3xl font-bold text-[#02476e] uppercase">
@@ -115,7 +94,6 @@ const AllVolunteers = () => {
               </div>
             </div>
 
-            {/* Featured cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
               {featuredPosts.map((post, index) => (
                 <motion.div
@@ -126,7 +104,6 @@ const AllVolunteers = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                 >
-                  {/* Image container with hover overlay */}
                   <div className="relative w-1/3 min-w-[200px] group overflow-hidden">
                     <img
                       src={post.thumbnail}
@@ -134,7 +111,6 @@ const AllVolunteers = () => {
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
 
-                    {/* Gradient overlay on hover */}
                     <div className="absolute inset-0 bg-gradient-to-t from-[#1111116e] to-[#0248705d] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
                       <Link to={`/volunteer/${post._id}`} className="w-full">
                         <motion.button
@@ -143,44 +119,23 @@ const AllVolunteers = () => {
                           whileTap={{ scale: 0.98 }}
                         >
                           <div className="relative px-6 py-3 font-medium text-white group">
-                            {/* Static gradient background */}
                             <div className="absolute inset-0 bg-gradient-to-r from-[#024870] to-[#016a96]"></div>
-
-                            {/* Animated gradient overlay on hover */}
                             <div className="absolute inset-0 bg-gradient-to-r from-[#6bd3f3] to-[#024870] opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-
-                            {/* Animated underline effect */}
                             <div className="absolute bottom-0 left-1/2 h-0.5 w-0 bg-[#6bd3f3] group-hover:w-full group-hover:left-0 transition-all duration-500"></div>
-
-                            {/* Text with icon animation */}
                             <span className="relative flex items-center justify-center gap-2 group-hover:gap-3 transition-all duration-300">
                               Learn more
-                              <svg
-                                className="w-4 h-4 transition-transform group-hover:translate-x-1 duration-200"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth="2"
-                                  d="M14 5l7 7m0 0l-7 7m7-7H3"
-                                />
-                              </svg>
+                              <FaChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1 duration-200" />
                             </span>
                           </div>
                         </motion.button>
                       </Link>
                     </div>
 
-                    {/* Category badge */}
                     <div className="absolute top-4 right-4 bg-[#094883] text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
                       {post.category}
                     </div>
                   </div>
 
-                  {/* Content container */}
                   <div className="w-2/3 p-6 flex flex-col">
                     <div className="flex justify-between items-start mb-3">
                       <h3 className="text-xl font-bold text-gray-800 transition-colors">
@@ -188,45 +143,20 @@ const AllVolunteers = () => {
                       </h3>
                     </div>
 
-                    {/* Location with icon */}
                     <div className="flex items-center text-sm text-gray-500 mb-3">
-                      <svg
-                        className="w-4 h-4 mr-2 text-blue-400"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
+                      <FaMapMarkerAlt className="w-4 h-4 mr-2 text-blue-400" />
                       {post.location}
                     </div>
 
-                    {/* Description with fade effect */}
                     <p className="text-gray-600 text-sm mb-4 line-clamp-3 relative">
                       {post.description}
                       <span className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-white to-transparent"></span>
                     </p>
 
-                    {/* Bottom section with deadline and secondary button */}
                     <div className="mt-auto pt-4 border-t border-gray-100">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center text-sm font-medium text-red-500">
-                          <svg
-                            className="w-4 h-4 mr-2"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
-                          </svg>
+                          <FaRegClock className="w-4 h-4 mr-2" />
                           <span className="font-semibold">Deadline:</span>{" "}
                           {new Date(post.deadline).toLocaleDateString()}
                         </div>
@@ -241,7 +171,6 @@ const AllVolunteers = () => {
       )}
 
       <div className="max-w-6xl mx-auto px-4 py-12">
-        {/* Minimalist Header */}
         <div className="mb-16 text-center">
           <div className="inline-block mb-4">
             <div className="w-16 h-1 bg-gray-300 mb-2 mx-auto"></div>
@@ -254,25 +183,11 @@ const AllVolunteers = () => {
           </p>
         </div>
 
-        {/* Elevated Search and Filter Panel */}
         <div className="bg-[#a4d5fd2f] rounded-xl p-6 mb-12 border border-[#07437411]">
-          {/* Minimal Search Bar */}
           <div className="flex items-center justify-center mb-8">
             <div className="flex w-full max-w-2xl overflow-hidden rounded-full shadow-md">
               <div className="flex items-center pl-4 bg-white">
-                <svg
-                  className="w-5 h-5 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
+                <FaSearch className="w-5 h-5 text-gray-400" />
               </div>
               <input
                 type="text"
@@ -293,8 +208,6 @@ const AllVolunteers = () => {
             </div>
           </div>
 
-          {/* Subtle Category Filter */}
-          {/* Enhanced Beautiful Category Filter */}
           <div className="flex flex-wrap justify-center gap-3 mb-6">
             {categories.map((category) => (
               <motion.button
@@ -319,29 +232,20 @@ const AllVolunteers = () => {
                 <span className="relative z-10 flex items-center">
                   {category}
                   {selectedCategory === category && (
-                    <motion.svg
-                      className="ml-1.5 h-4 w-4"
+                    <motion.span
+                      className="ml-1.5"
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       transition={{ delay: 0.2 }}
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </motion.svg>
+                      <FaCheck className="h-4 w-4" />
+                    </motion.span>
                   )}
                 </span>
               </motion.button>
             ))}
           </div>
 
-          {/* Discrete Layout Toggle */}
           <div className="flex justify-center">
             <motion.div
               className="inline-flex bg-white rounded-full p-1 border border-gray-200 shadow-sm"
@@ -364,21 +268,11 @@ const AllVolunteers = () => {
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   />
                 )}
-                <svg
+                <FaTh
                   className={`w-4 h-4 relative z-10 ${
                     !isTableLayout ? "text-white" : "text-gray-400"
                   }`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
-                  />
-                </svg>
+                />
                 <span className="relative z-10">Cards</span>
               </button>
 
@@ -397,21 +291,11 @@ const AllVolunteers = () => {
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   />
                 )}
-                <svg
+                <FaList
                   className={`w-4 h-4 relative z-10 ${
                     isTableLayout ? "text-white" : "text-gray-400"
                   }`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-                  />
-                </svg>
+                />
                 <span className="relative z-10">Table</span>
               </button>
             </motion.div>
@@ -427,19 +311,7 @@ const AllVolunteers = () => {
           transition={{ duration: 0.5 }}
         >
           <div className="mx-auto w-24 h-24 flex items-center justify-center rounded-full bg-red-50 mb-6">
-            <svg
-              className="w-12 h-12 text-red-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
+            <FaFrown className="w-12 h-12 text-red-400" />
           </div>
 
           <h3 className="text-xl font-semibold text-gray-800 mb-2">
@@ -465,24 +337,11 @@ const AllVolunteers = () => {
             }}
           >
             Reset filters
-            <svg
-              className="ml-2 -mr-1 h-4 w-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-              />
-            </svg>
+            <FaRedo className="ml-2 -mr-1 h-4 w-4" />
           </motion.button>
         </motion.div>
       ) : isTableLayout ? (
         <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
-          {/* Desktop Table (shown on md screens and up) */}
           <div className="hidden md:block overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-[#024870]">
@@ -554,57 +413,15 @@ const AllVolunteers = () => {
                     <td className="px-6 py-5">
                       <div className="space-y-2">
                         <div className="flex items-center text-sm text-gray-700">
-                          <svg
-                            className="flex-shrink-0 mr-2 h-4 w-4 text-[#024870]"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                            />
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                            />
-                          </svg>
+                          <FaMapMarkerAlt className="flex-shrink-0 mr-2 h-4 w-4 text-[#024870]" />
                           {post.location}
                         </div>
                         <div className="flex items-center text-sm text-gray-700">
-                          <svg
-                            className="flex-shrink-0 mr-2 h-4 w-4 text-[#024870]"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-                            />
-                          </svg>
+                          <FaUsers className="flex-shrink-0 mr-2 h-4 w-4 text-[#024870]" />
                           {post.volunteersNeeded} volunteers needed
                         </div>
                         <div className="flex items-center text-sm text-gray-700">
-                          <svg
-                            className="flex-shrink-0 mr-2 h-4 w-4 text-[#024870]"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                            />
-                          </svg>
+                          <FaCalendarAlt className="flex-shrink-0 mr-2 h-4 w-4 text-[#024870]" />
                           Apply by{" "}
                           {new Date(post.deadline).toLocaleDateString()}
                         </div>
@@ -613,11 +430,11 @@ const AllVolunteers = () => {
                     <td className="px-6 py-5">
                       <span
                         className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
-                ${
-                  new Date(post.deadline) > new Date()
-                    ? "bg-green-100 text-green-800"
-                    : "bg-red-100 text-red-800"
-                }`}
+                        ${
+                          new Date(post.deadline) > new Date()
+                            ? "bg-green-100 text-green-800"
+                            : "bg-red-100 text-red-800"
+                        }`}
                       >
                         {new Date(post.deadline) > new Date()
                           ? "Active"
@@ -628,19 +445,7 @@ const AllVolunteers = () => {
                       <Link to={`/volunteer/${post._id}`}>
                         <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-[#024870] hover:bg-[#01314d] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#024870] transition-all">
                           View Details
-                          <svg
-                            className="ml-2 -mr-1 h-4 w-4"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M14 5l7 7m0 0l-7 7m7-7H3"
-                            />
-                          </svg>
+                          <FaChevronRight className="ml-2 -mr-1 h-4 w-4" />
                         </button>
                       </Link>
                     </td>
@@ -650,7 +455,6 @@ const AllVolunteers = () => {
             </table>
           </div>
 
-          {/* Mobile Cards (shown on sm screens and down) */}
           <div className="md:hidden space-y-4 p-4">
             {filteredPosts.map((post) => (
               <div
@@ -678,11 +482,11 @@ const AllVolunteers = () => {
                       </div>
                       <span
                         className={`ml-2 px-2 py-1 text-xs font-medium rounded-full 
-                ${
-                  new Date(post.deadline) > new Date()
-                    ? "bg-green-100 text-green-800"
-                    : "bg-red-100 text-red-800"
-                }`}
+                        ${
+                          new Date(post.deadline) > new Date()
+                            ? "bg-green-100 text-green-800"
+                            : "bg-red-100 text-red-800"
+                        }`}
                       >
                         {new Date(post.deadline) > new Date()
                           ? "Active"
@@ -703,57 +507,15 @@ const AllVolunteers = () => {
 
                     <div className="mt-3 space-y-1 text-sm text-gray-700">
                       <div className="flex items-center">
-                        <svg
-                          className="flex-shrink-0 mr-2 h-4 w-4 text-[#024870]"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                          />
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                          />
-                        </svg>
+                        <FaMapMarkerAlt className="flex-shrink-0 mr-2 h-4 w-4 text-[#024870]" />
                         {post.location}
                       </div>
                       <div className="flex items-center">
-                        <svg
-                          className="flex-shrink-0 mr-2 h-4 w-4 text-[#024870]"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-                          />
-                        </svg>
+                        <FaUsers className="flex-shrink-0 mr-2 h-4 w-4 text-[#024870]" />
                         {post.volunteersNeeded} volunteers needed
                       </div>
                       <div className="flex items-center">
-                        <svg
-                          className="flex-shrink-0 mr-2 h-4 w-4 text-[#024870]"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                          />
-                        </svg>
+                        <FaCalendarAlt className="flex-shrink-0 mr-2 h-4 w-4 text-[#024870]" />
                         Apply by {new Date(post.deadline).toLocaleDateString()}
                       </div>
                     </div>
@@ -762,19 +524,7 @@ const AllVolunteers = () => {
                       <Link to={`/volunteer/${post._id}`} className="w-full">
                         <button className="w-full flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-[#024870] hover:bg-[#01314d] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#024870] transition-all">
                           View Details
-                          <svg
-                            className="ml-2 -mr-1 h-4 w-4"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M14 5l7 7m0 0l-7 7m7-7H3"
-                            />
-                          </svg>
+                          <FaChevronRight className="ml-2 -mr-1 h-4 w-4" />
                         </button>
                       </Link>
                     </div>
@@ -784,22 +534,9 @@ const AllVolunteers = () => {
             ))}
           </div>
 
-          {/* Empty State */}
           {filteredPosts.length === 0 && (
             <div className="text-center py-12">
-              <svg
-                className="mx-auto h-12 w-12 text-gray-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1}
-                  d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
+              <FaRegSadTear className="mx-auto h-12 w-12 text-gray-400" />
               <h3 className="mt-2 text-lg font-medium text-gray-900">
                 No opportunities found
               </h3>
@@ -819,7 +556,6 @@ const AllVolunteers = () => {
               whileHover={{ y: -4 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              {/* Image container with consistent aspect ratio */}
               <div className="relative pt-[60%] w-full overflow-hidden bg-gray-100">
                 <img
                   src={post.thumbnail}
@@ -832,7 +568,6 @@ const AllVolunteers = () => {
                 </span>
               </div>
 
-              {/* Card Content */}
               <div className="p-4 flex flex-col flex-grow">
                 <div className="mb-3">
                   <h3 className="text-lg font-semibold text-gray-800 line-clamp-1 mb-1">

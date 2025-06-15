@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-console.log(motion)
+console.log(motion);
 import Lottie from "lottie-react";
 import Swal from "sweetalert2";
 import { HiArrowNarrowRight } from "react-icons/hi";
@@ -9,6 +9,7 @@ import { FaSpinner, FaGoogle, FaGithub } from "react-icons/fa";
 import registerAnimation from "../assets/register.json";
 import { AuthContext } from "../context/AuthContext";
 import { updateProfile } from "firebase/auth";
+import { ToastContainer, toast } from "react-toastify";
 
 const Register = () => {
   const [errors, setErrors] = useState({});
@@ -35,11 +36,45 @@ const Register = () => {
       new FormData(form).entries()
     );
 
+    if (name.trim() === "") {
+      toast.error("Please enter your name!", {
+        position: "top-right",
+        autoClose: 5000,
+        theme: "colored",
+      });
+      setLoading(false);
+      return;
+    }
+
+    if (email.trim() === "") {
+      toast.error("Please enter a valid email!", {
+        position: "top-right",
+        autoClose: 5000,
+        theme: "colored",
+      });
+      setLoading(false);
+      return;
+    }
+
+    if (photoURL.trim() === "") {
+      toast.error("Please provide a Photo URL!", {
+        position: "top-right",
+        autoClose: 5000,
+        theme: "colored",
+      });
+      setLoading(false);
+      return;
+    }
+
     const passwordErrors = validatePassword(password);
     if (passwordErrors.length > 0) {
-      setErrors({
-        password: `Password must contain ${passwordErrors.join(", ")}`,
+      const errorMessage = `Password must contain ${passwordErrors.join(", ")}`;
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 5000,
+        theme: "colored",
       });
+      setErrors({ password: errorMessage });
       setLoading(false);
       return;
     }
@@ -95,6 +130,7 @@ const Register = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex flex-col justify-center pb-12 sm:px-6 lg:px-8 items-start">
+      <ToastContainer />
       <div className="text-start container mx-auto lg:pl-10">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -194,7 +230,6 @@ const Register = () => {
                 name="name"
                 type="text"
                 placeholder="Name"
-                required
                 className="peer block w-full py-3 bg-transparent border-b border-[#0b50a0] focus:border-blue-400 placeholder-[#032d5e] focus:outline-none"
               />
             </motion.div>
@@ -204,7 +239,6 @@ const Register = () => {
                 name="email"
                 type="email"
                 placeholder="Email"
-                required
                 className="peer block w-full py-3 bg-transparent border-b border-[#0b50a0] focus:border-blue-400 placeholder-[#032d5e] focus:outline-none"
               />
             </motion.div>

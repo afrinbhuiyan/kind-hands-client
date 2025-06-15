@@ -50,9 +50,7 @@ const StatCard = () => {
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
               <div className="relative h-full transition-all duration-500 transform-style-preserve-3d group-hover:rotate-y-180 py-24">
-                {/* Front Face */}
                 <div className="absolute inset-0 bg-gradient-to-br from-white to-[#f0f9ff] dark:from-gray-800 dark:to-gray-900 p-8 flex flex-col items-center justify-center rounded-xl shadow-lg border border-[#02316620] dark:border-gray-700">
-                  {/* Floating Icon */}
                   <div className="relative">
                     <div className="text-white bg-gradient-to-br from-[#023166] to-[#18c9ff] text-3xl p-5 rounded-full shadow-lg shadow-[#18c9ff40] absolute -top-16 left-1/2 transform -translate-x-1/2 z-10 group-hover:scale-110 transition-transform duration-300">
                       {stat.icon}
@@ -60,7 +58,6 @@ const StatCard = () => {
                     <div className="absolute -top-14 left-1/2 transform -translate-x-1/2 w-20 h-20 rounded-full bg-[#18c9ff30] blur-md group-hover:opacity-80 opacity-0 transition-opacity duration-300"></div>
                   </div>
 
-                  {/* CountUp */}
                   <h3 className="text-4xl font-bold text-[#023166] dark:text-white mt-8 mb-2">
                     {isInView ? (
                       <CountUp

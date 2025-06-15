@@ -18,3 +18,7 @@
 .swal2-success .swal2-success-ring {
   border-color: rgba(59, 178, 246, 0.3) !important;
 }
+
+.Toastify__toast-container {
+  z-index: 9999;
+}

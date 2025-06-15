@@ -10,7 +10,6 @@ const TopNav = () => {
   return (
     <nav className="bg-[#024870] text-white text-sm py-2 px-4 border-b border-[#6bd3f3]/20">
       <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
-        {/* Contact Info - Stacked on mobile, row on desktop */}
         <div className="flex flex-col md:flex-row items-center space-y-1 md:space-y-0 md:space-x-6 mb-2 md:mb-0">
           <a 
             href="tel:000123456789" 
@@ -40,7 +39,6 @@ const TopNav = () => {
           </a>
         </div>
 
-        {/* Social Links */}
         <div className="flex space-x-4">
           <a
             href="#facebook"
