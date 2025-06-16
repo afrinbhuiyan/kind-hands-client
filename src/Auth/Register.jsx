@@ -10,13 +10,14 @@ import registerAnimation from "../assets/register.json";
 import { AuthContext } from "../context/AuthContext";
 import { updateProfile } from "firebase/auth";
 import { ToastContainer, toast } from "react-toastify";
+import useAuth from "../hooks/useAuth";
 
 const Register = () => {
   const [errors, setErrors] = useState({});
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { createUser } = useContext(AuthContext);
+  const { createUser } = useAuth();
 
   const validatePassword = (password) => {
     const errors = [];

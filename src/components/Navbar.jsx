@@ -2,17 +2,19 @@ import { Link, NavLink } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import { IoIosArrowDown, IoMdLogOut } from "react-icons/io";
 import { FiSettings } from "react-icons/fi";
-import { useContext, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
 import navLogo from "../assets/navLogo.png";
 import SearchBar from "./SearchBar";
 import ThemeToggle from "./ThemeToggle";
 import { MdClose, MdMenu } from "react-icons/md";
 import { motion, AnimatePresence } from "framer-motion";
+import useAuth from "../hooks/useAuth";
+import useIsActivePath from "../hooks/useIsActivePath";
 console.log(motion);
 
 const Navbar = () => {
-  const { user, logout } = useContext(AuthContext);
+  const { user, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -87,6 +89,8 @@ const Navbar = () => {
   const isIPad =
     /iPad|Macintosh/i.test(navigator.userAgent) && "ontouchend" in document;
   const shouldShowMobileMenu = windowSize.width < 1024 || isIPad;
+
+  const isProfileActive = useIsActivePath(["/add-volunteer", "/my-posts"]);
 
   return (
     <header className="sticky top-0 z-50">
@@ -173,31 +177,17 @@ const Navbar = () => {
 
                 {user && (
                   <>
-                    <NavLink
-                      to="/add-volunteer"
-                      className={({ isActive }) =>
-                        `px-3 py-2 flex items-center text-sm font-medium rounded-md transition-all ${
-                          isActive
-                            ? "text-[#024870] dark:text-white font-semibold bg-[#6bd3f3]/10"
-                            : "text-gray-600 dark:text-gray-300 hover:text-[#024870] dark:hover:text-white hover:bg-[#6bd3f3]/10"
-                        }`
-                      }
-                      onClick={closeMenu}
-                    >
-                      Add Volunteer
-                    </NavLink>
-                    <div className="dropdown dropdown-bottom dropdown-end">
+                    <div className="dropdown dropdown-hover dropdown-end">
                       <div tabIndex={0} role="button" className="m-1">
                         <div
                           className={`px-3 py-2 flex items-center text-sm font-medium rounded-md transition-all gap-2 ${
-                            location.pathname.startsWith("/add-volunteer") ||
-                            location.pathname.startsWith("/manage-posts")
+                            isProfileActive
                               ? "text-[#024870] dark:text-white font-semibold bg-[#6bd3f3]/10"
                               : "text-gray-600 dark:text-gray-300 hover:text-[#024870] dark:hover:text-white hover:bg-[#6bd3f3]/10"
                           }`}
                         >
                           My Profile
-                          <IoIosArrowDown />
+                          <IoIosArrowDown className="text-xs transition-transform duration-200" />
                         </div>
                       </div>
 
@@ -207,7 +197,7 @@ const Navbar = () => {
                       >
                         <li>
                           <NavLink
-                            to="/add-volunteer-need-post"
+                            to="/add-volunteer"
                             className={({ isActive }) =>
                               `px-3 py-2 text-sm rounded-md transition-all ${
                                 isActive
@@ -217,12 +207,12 @@ const Navbar = () => {
                             }
                             onClick={closeMenu}
                           >
-                            Add Volunteer need Post
+                            Add Volunteer
                           </NavLink>
                         </li>
                         <li>
                           <NavLink
-                            to="/manage-my-posts"
+                            to="/my-posts"
                             className={({ isActive }) =>
                               `px-3 py-2 text-sm rounded-md transition-all ${
                                 isActive

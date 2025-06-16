@@ -8,8 +8,7 @@ import AddVolunteer from "../pages/AddVolunteer/AddVolunteer";
 import AllVolunteers from "../pages/AllVolunteers/AllVolunteers";
 import VolunteerDetails from "../pages/VolunteerDetails/VolunteerDetails";
 import ErrorPage from "../pages/ErrorPage/ErrorPage";
-import MyVolunteerNeedPost from "../pages/MyPosts/MyVolunteerNeedPost";
-import MyVolunteerRequestPost from "../pages/MyPosts/MyVolunteerRequestPost";
+import MyPosts from "../pages/MyPosts/MyPosts";
 
 export const router = createBrowserRouter([
   {
@@ -42,18 +41,10 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "/add-volunteer-need-post",
+        path: "/my-posts",
         element: (
           <PrivateRoute>
-            <MyVolunteerNeedPost/>
-          </PrivateRoute>
-        ),
-      },
-      {
-        path: "/manage-my-posts",
-        element: (
-          <PrivateRoute>
-            <MyVolunteerRequestPost/>
+            <MyPosts/>
           </PrivateRoute>
         ),
       },

@@ -4,7 +4,6 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Swal from "sweetalert2";
 import { motion } from "framer-motion";
-import { AuthContext } from "../../context/AuthContext";
 import useDynamicTitle from "../../hooks/useDynamicTitle";
 import {
   FaImage,
@@ -18,9 +17,10 @@ import {
 } from "react-icons/fa";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { addVolunteerPost } from "../../services/api/addVolunteerApi";
+import useAuth from "../../hooks/useAuth";
 
 const AddVolunteer = () => {
-  const { user } = useContext(AuthContext);
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [deadline, setDeadline] = useState(new Date());
   useDynamicTitle("Add Volunteer");

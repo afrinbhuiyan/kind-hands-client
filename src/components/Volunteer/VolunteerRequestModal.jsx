@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-import { AuthContext } from "../../context/AuthContext";
 import { toast } from "sonner";
 import Swal from "sweetalert2";
 import { motion, AnimatePresence } from "framer-motion";
@@ -12,9 +11,10 @@ import {
   FaImage,
 } from "react-icons/fa";
 import { createVolunteerRequest } from "../../services/api/VolunteerRequestApi";
+import useAuth from "../../hooks/useAuth";
 
 const VolunteerRequestModal = ({ post, isOpen, onClose, onSuccess }) => {
-  const { user } = useContext(AuthContext);
+  const { user } = useAuth();
   const [suggestion, setSuggestion] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -45,7 +45,7 @@ const VolunteerRequestModal = ({ post, isOpen, onClose, onSuccess }) => {
         createdAt: new Date(),
       };
 
-      await createVolunteerRequest(requestData);
+      await createVolunteerRequest(requestData, user.accessToken);
 
       await onSuccess();
 

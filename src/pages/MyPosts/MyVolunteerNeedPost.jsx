@@ -1,18 +1,17 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import { FaCircleUser } from "react-icons/fa6";
 import UpdatePostModal from "../../components/Volunteer/MyPost/UpdatePostModal";
-import { AuthContext } from "../../context/AuthContext";
 import { motion } from "framer-motion";
-import { FiActivity, FiDatabase, FiMail, FiTarget } from "react-icons/fi";
+import { FiActivity, FiMail } from "react-icons/fi";
 import useDynamicTitle from "../../hooks/useDynamicTitle";
 import Spinner from "../../components/Spinner";
 import { deletePostById, getMyPosts } from "../../services/api/postApi";
-console.log(motion);
+import useAuth from "../../hooks/useAuth";
 
 const MyVolunteerNeedPost = () => {
-  const { user } = useContext(AuthContext);
+  const { user } = useAuth();
   const [myPosts, setMyPosts] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
@@ -21,11 +20,11 @@ const MyVolunteerNeedPost = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    getMyPosts(user.email).then((data) => {
+    getMyPosts(user.email, user.accessToken).then((data) => {
       setMyPosts(data);
       setIsLoading(false);
     });
-  }, [user?.email]);
+  }, [user?.email, user.accessToken]);
 
   const handleDelete = (taskId) => {
     Swal.fire({
@@ -53,7 +52,7 @@ const MyVolunteerNeedPost = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await deletePostById(taskId);
+          await deletePostById(taskId, user.accessToken);
 
           Swal.fire({
             title: "Deleted!",
@@ -88,13 +87,13 @@ const MyVolunteerNeedPost = () => {
 
   const refetchMyPosts = () => {
     if (!user?.email) return;
-    getMyPosts(user.email)
+    getMyPosts(user.email, user.accessToken)
       .then((data) => setMyPosts(data))
       .catch((err) => console.error(err));
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-4">
+    <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-4">
       <UpdatePostModal
         isOpen={isModalOpen}
         onClose={closeModal}
@@ -103,26 +102,26 @@ const MyVolunteerNeedPost = () => {
       />
 
       <motion.div
-        className="relative mb-12 p-8 rounded-xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 shadow-lg"
+        className="relative mb-6 sm:mb-8 md:mb-12 p-4 sm:p-6 md:p-8 rounded-xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 shadow-lg"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        <div className="flex items-center gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-6 sm:mb-8">
           <motion.div
             className="relative"
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
           >
             <div className="absolute inset-0 rounded-full bg-[#024870]/10 dark:bg-[#024870]/20" />
-            <FaCircleUser className="relative text-4xl text-[#024870] dark:text-[#3b82f6]" />
+            <FaCircleUser className="relative text-3xl sm:text-4xl text-[#024870] dark:text-[#3b82f6]" />
           </motion.div>
 
           <div>
-            <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
+            <h1 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white">
               {user.displayName}
             </h1>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-1.5">
+            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-1.5">
               <FiMail className="text-[#024870] dark:text-[#3b82f6]" />{" "}
               {user.email}
             </p>
@@ -130,8 +129,8 @@ const MyVolunteerNeedPost = () => {
         </div>
 
         {/* Section Header */}
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-[#024870] dark:text-[#3b82f6]">
+        <div className="mb-6 sm:mb-8">
+          <h2 className="text-xl sm:text-2xl font-bold text-[#024870] dark:text-[#3b82f6]">
             Volunteer Dashboard
             <motion.div
               className="h-0.5 bg-[#024870]/30 dark:bg-[#3b82f6]/30 mt-1"
@@ -144,26 +143,26 @@ const MyVolunteerNeedPost = () => {
 
         {/* Stats Card */}
         <motion.div
-          className="bg-[#024870]/5 dark:bg-[#1e3a8a]/10 p-5 rounded-lg border border-[#024870]/10 dark:border-[#1e3a8a]/20"
+          className="bg-[#024870]/5 dark:bg-[#1e3a8a]/10 p-4 sm:p-5 rounded-lg border border-[#024870]/10 dark:border-[#1e3a8a]/20"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-[#024870] dark:text-[#93c5fd]">
+              <p className="text-xs sm:text-sm font-medium text-[#024870] dark:text-[#93c5fd]">
                 Active Opportunities
               </p>
-              <p className="text-3xl font-bold text-[#024870] dark:text-white mt-1">
+              <p className="text-2xl sm:text-3xl font-bold text-[#024870] dark:text-white mt-1">
                 {myPosts.length}
               </p>
             </div>
-            <div className="p-3 rounded-lg bg-white dark:bg-gray-800 shadow-sm">
-              <FiActivity className="text-[#024870] dark:text-[#3b82f6] text-xl" />
+            <div className="p-2 sm:p-3 rounded-lg bg-white dark:bg-gray-800 shadow-sm">
+              <FiActivity className="text-[#024870] dark:text-[#3b82f6] text-lg sm:text-xl" />
             </div>
           </div>
 
-          <div className="mt-4 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+          <div className="mt-3 sm:mt-4 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
             <motion.div
               className="h-full bg-[#024870] dark:bg-[#3b82f6]"
               initial={{ width: 0 }}
@@ -175,16 +174,18 @@ const MyVolunteerNeedPost = () => {
       </motion.div>
 
       {isLoading ? (
-        <Spinner />
+        <div className="flex justify-center py-12">
+          <Spinner />
+        </div>
       ) : myPosts.length === 0 ? (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="text-center py-12 bg-white rounded-xl shadow-sm border border-gray-100"
+          className="text-center py-8 sm:py-12 bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800"
         >
           <svg
-            className="mx-auto h-12 w-12 text-gray-400"
+            className="mx-auto h-10 sm:h-12 w-10 sm:w-12 text-gray-400"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -196,16 +197,16 @@ const MyVolunteerNeedPost = () => {
               d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <h3 className="mt-4 text-lg font-medium text-gray-900">
+          <h3 className="mt-3 sm:mt-4 text-base sm:text-lg font-medium text-gray-900 dark:text-white">
             No volunteer posts yet
           </h3>
-          <p className="mt-1 text-gray-500">
+          <p className="mt-1 text-sm sm:text-base text-gray-500 dark:text-gray-400">
             Get started by creating your first volunteer need post.
           </p>
-          <div className="mt-6">
+          <div className="mt-4 sm:mt-6">
             <Link
               to="/create-post"
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 border border-transparent text-xs sm:text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               Create Post
             </Link>
@@ -232,7 +233,7 @@ const MyVolunteerNeedPost = () => {
                     <th
                       key={header}
                       scope="col"
-                      className={`px-6 py-3 text-left text-xs font-medium text-[#024870] dark:text-[#93c5fd] uppercase tracking-wider ${
+                      className={`px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-left text-xs font-medium text-[#024870] dark:text-[#93c5fd] uppercase tracking-wider ${
                         i === 4 ? "text-right" : ""
                       }`}
                     >
@@ -250,26 +251,26 @@ const MyVolunteerNeedPost = () => {
                     transition={{ delay: index * 0.05 + 0.4 }}
                     className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
                   >
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900 dark:text-white">
+                    <td className="px-3 sm:px-4 md:px-6 py-3 whitespace-nowrap">
+                      <div className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white">
                         {post.title}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-3 sm:px-4 md:px-6 py-3 whitespace-nowrap">
                       <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-[#024870]/10 dark:bg-[#1e3a8a]/20 text-[#024870] dark:text-[#3b82f6]">
                         {post.category}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
+                    <td className="px-3 sm:px-4 md:px-6 py-3 whitespace-nowrap text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                       {new Date(post.deadline).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "short",
                         day: "numeric",
                       })}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-3 sm:px-4 md:px-6 py-3 whitespace-nowrap">
                       <div className="flex items-center">
-                        <div className="w-16 bg-gray-200 dark:bg-gray-700 rounded-full h-2 mr-2">
+                        <div className="w-12 sm:w-16 bg-gray-200 dark:bg-gray-700 rounded-full h-2 mr-2">
                           <div
                             className="bg-[#024870] dark:bg-[#3b82f6] h-2 rounded-full"
                             style={{
@@ -282,22 +283,22 @@ const MyVolunteerNeedPost = () => {
                             }}
                           />
                         </div>
-                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                        <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                           {post.volunteersNeeded}/{post.volunteersRequired}
                         </span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <div className="flex justify-end space-x-2">
+                    <td className="px-3 sm:px-4 md:px-6 py-3 whitespace-nowrap text-right text-xs sm:text-sm font-medium">
+                      <div className="flex justify-end space-x-1 sm:space-x-2">
                         <button
                           onClick={() => openUpdateModal(post)}
-                          className="text-[#024870] dark:text-[#3b82f6] hover:text-[#023047] dark:hover:text-[#1d4ed8] px-3 py-1 rounded-md hover:bg-[#024870]/10 dark:hover:bg-[#1e3a8a]/20 transition-colors"
+                          className="text-[#024870] dark:text-[#3b82f6] hover:text-[#023047] dark:hover:text-[#1d4ed8] px-2 sm:px-3 py-0.5 sm:py-1 rounded-md hover:bg-[#024870]/10 dark:hover:bg-[#1e3a8a]/20 transition-colors"
                         >
                           Edit
                         </button>
                         <button
                           onClick={() => handleDelete(post._id)}
-                          className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 px-3 py-1 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                          className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 px-2 sm:px-3 py-0.5 sm:py-1 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                         >
                           Delete
                         </button>

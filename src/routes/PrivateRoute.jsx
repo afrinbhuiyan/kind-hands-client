@@ -1,10 +1,10 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Navigate, useLocation } from "react-router";
-import { AuthContext } from "../context/AuthContext";
 import Spinner from "../components/Spinner";
+import useAuth from "../hooks/useAuth";
 
 const PrivateRoute = ({ children }) => {
-  const { user, loading } = useContext(AuthContext);
+  const { user, loading } = useAuth();
 
   const location = useLocation();
 

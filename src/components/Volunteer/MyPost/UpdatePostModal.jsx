@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Swal from "sweetalert2";
-import { AuthContext } from "../../../context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 console.log(motion);
 import {
@@ -18,9 +17,10 @@ import {
   FaEnvelope,
 } from "react-icons/fa";
 import { updatePostById } from "../../../services/api/postApi";
+import useAuth from "../../../hooks/useAuth";
 
 const UpdatePostModal = ({ isOpen, onClose, postData, refetch }) => {
-  const { user } = useContext(AuthContext);
+  const { user } = useAuth();
   const [deadline, setDeadline] = useState(new Date());
   const [loading, setLoading] = useState(false);
   const [categories] = useState([
@@ -56,7 +56,7 @@ const UpdatePostModal = ({ isOpen, onClose, postData, refetch }) => {
     };
 
     try {
-      await updatePostById(postData._id, updatedPost);
+      await updatePostById(postData._id, updatedPost, user.accessToken);
 
       Swal.fire({
         title: "Success!",

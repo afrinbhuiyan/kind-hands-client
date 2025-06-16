@@ -1,9 +1,11 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
-export const createVolunteerRequest = async (requestData) => {
+export const createVolunteerRequest = async (requestData, accessToken) => {
   const response = await fetch(`${API_URL}/volunteer_requests`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json" , 
+      Authorization: `Bearer ${accessToken}`,
+    },
     body: JSON.stringify(requestData),
   });
 
@@ -14,15 +16,22 @@ export const createVolunteerRequest = async (requestData) => {
   return response.json();
 };
 
-export const getMyVolunteerRequests = async (email) => {
-  const res = await fetch(`${API_URL}/my-volunteer-requests?email=${email}`);
+export const getMyVolunteerRequests = async (email, accessToken) => {
+  const res = await fetch(`${API_URL}/my-volunteer-requests?email=${email}` , {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    }
+  });
   if (!res.ok) throw new Error("Failed to fetch volunteer requests");
   return res.json();
 };
 
-export const deleteVolunteerRequestById = async (id) => {
+export const deleteVolunteerRequestById = async (id, accessToken) => {
   const res = await fetch(`${API_URL}/volunteer-requests/${id}`, {
     method: "DELETE",
+    headers: {
+       Authorization: `Bearer ${accessToken}`,
+    }
   });
 
   const data = await res.json();

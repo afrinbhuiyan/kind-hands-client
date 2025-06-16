@@ -11,11 +11,12 @@ import { IoCheckmark, IoLogIn, IoKeyOutline } from "react-icons/io5";
 import { HiArrowNarrowRight } from "react-icons/hi";
 import { FaSpinner } from "react-icons/fa";
 import { AuthContext } from "../context/AuthContext";
+import useAuth from "../hooks/useAuth";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const { signInUser, googleLogin } = useContext(AuthContext);
+  const { signInUser, googleLogin } = useAuth();
   const navigate = useNavigate();
 
   console.log(error);
