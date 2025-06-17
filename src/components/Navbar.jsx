@@ -11,7 +11,7 @@ import { MdClose, MdMenu } from "react-icons/md";
 import { motion, AnimatePresence } from "framer-motion";
 import useAuth from "../hooks/useAuth";
 import useIsActivePath from "../hooks/useIsActivePath";
-console.log(motion);
+import { toast, ToastContainer } from "react-toastify";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -63,7 +63,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout()
-      .then(() => console.log("Logged out successfully"))
+      .then(() => toast.success("You've been logged out successfully"))
       .catch((error) => console.log(error.message));
   };
 
@@ -94,6 +94,7 @@ const Navbar = () => {
 
   return (
     <header className="sticky top-0 z-50">
+      <ToastContainer/>
       <nav
         className={`bg-white dark:bg-gray-900 transition-all duration-300 ${
           isScrolled ? "shadow-md" : "shadow-sm"

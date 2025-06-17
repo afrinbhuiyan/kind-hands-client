@@ -3,7 +3,6 @@ import { useState, useEffect, useRef } from "react";
 import { IoSearchOutline, IoCloseOutline } from "react-icons/io5";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiLoader } from "react-icons/fi";
-console.log(motion)
 
 const SearchBar = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -13,7 +12,6 @@ const SearchBar = () => {
   const searchRef = useRef(null);
   const inputRef = useRef(null);
 
-  // Close search when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
@@ -24,14 +22,12 @@ const SearchBar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Focus input when search opens
   useEffect(() => {
     if (showSearch && inputRef.current) {
       inputRef.current.focus();
     }
   }, [showSearch]);
 
-  // Debounced search
   useEffect(() => {
     if (searchQuery.trim() === "") {
       setResults([]);
@@ -48,7 +44,6 @@ const SearchBar = () => {
   const performSearch = async (query) => {
     setIsSearching(true);
     try {
-      // Replace with your actual search API call
       const mockResults = await mockSearchAPI(query);
       setResults(mockResults);
     } catch (error) {
@@ -73,15 +68,12 @@ const SearchBar = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      // Handle final search submission
       console.log("Final search:", searchQuery);
-      // Redirect to search page or show results
     }
   };
 
   return (
     <div className="relative" ref={searchRef}>
-      {/* Search Trigger Button */}
       <button
         onClick={() => setShowSearch(!showSearch)}
         className="p-2 text-gray-600 hover:text-[#024870] transition-colors relative"
@@ -98,7 +90,6 @@ const SearchBar = () => {
         )}
       </button>
 
-      {/* Search Panel */}
       <AnimatePresence>
         {showSearch && (
           <motion.div
@@ -130,14 +121,12 @@ const SearchBar = () => {
                 )}
               </div>
 
-              {/* Loading Indicator */}
               {isSearching && (
                 <div className="absolute right-3 top-2.5">
                   <FiLoader className="w-4 h-4 text-[#024870] animate-spin" />
                 </div>
               )}
 
-              {/* Search Results */}
               {results.length > 0 && (
                 <div className="max-h-96 overflow-y-auto py-1">
                   {results.map((result) => (
@@ -145,7 +134,6 @@ const SearchBar = () => {
                       key={result.id}
                       className="px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-50 last:border-0"
                       onClick={() => {
-                        // Handle result click
                         console.log("Selected:", result);
                         setShowSearch(false);
                       }}
@@ -161,14 +149,12 @@ const SearchBar = () => {
                 </div>
               )}
 
-              {/* Empty State */}
               {!isSearching && searchQuery && results.length === 0 && (
                 <div className="px-4 py-6 text-center text-gray-500 text-sm">
                   No results found for "{searchQuery}"
                 </div>
               )}
 
-              {/* Initial State */}
               {!searchQuery && (
                 <div className="px-4 py-6 text-center text-gray-500 text-sm">
                   Type to search opportunities, users, etc.

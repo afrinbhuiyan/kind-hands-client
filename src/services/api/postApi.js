@@ -1,7 +1,6 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
 export const getMyPosts = async (email, accessToken) => {
-  console.log(accessToken)
   const res = await fetch(`${API_URL}/my-posts?email=${email}`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,

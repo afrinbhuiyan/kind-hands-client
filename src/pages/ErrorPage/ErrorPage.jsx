@@ -1,8 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
-console.log(motion)
 import { Link } from "react-router-dom";
-import { FiHome, FiRefreshCw } from "react-icons/fi";
+import { FiHome } from "react-icons/fi";
 import Lottie from "lottie-react";
 import errorAnimation from "../../assets/error.json";
 import cloudAnimation from "../../assets/cloudAnimation.json";

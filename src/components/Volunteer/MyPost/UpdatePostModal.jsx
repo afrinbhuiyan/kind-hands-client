@@ -3,7 +3,6 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Swal from "sweetalert2";
 import { motion, AnimatePresence } from "framer-motion";
-console.log(motion);
 import {
   FaTimes,
   FaImage,

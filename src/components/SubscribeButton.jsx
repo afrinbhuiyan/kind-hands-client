@@ -2,7 +2,6 @@ import React from "react";
 import { motion } from "framer-motion";
 import { IoMdSend } from "react-icons/io";
 import Swal from "sweetalert2";
-console.log(motion)
 
 const SubscribeButton = ({ emailRef }) => {
   const handleSubscribe = (e) => {

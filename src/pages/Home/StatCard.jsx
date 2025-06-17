@@ -2,7 +2,6 @@ import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import CountUp from "react-countup";
 import { FaChartLine, FaHandsHelping, FaHeart, FaUsers } from "react-icons/fa";
-console.log(motion);
 
 const StatCard = () => {
   const stats = [

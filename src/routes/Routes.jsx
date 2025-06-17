@@ -9,6 +9,9 @@ import AllVolunteers from "../pages/AllVolunteers/AllVolunteers";
 import VolunteerDetails from "../pages/VolunteerDetails/VolunteerDetails";
 import ErrorPage from "../pages/ErrorPage/ErrorPage";
 import MyPosts from "../pages/MyPosts/MyPosts";
+import Settings from "../pages/Settings";
+import Profile from "../pages/Profile";
+import About from "../pages/About";
 
 export const router = createBrowserRouter([
   {
@@ -44,9 +47,29 @@ export const router = createBrowserRouter([
         path: "/my-posts",
         element: (
           <PrivateRoute>
-            <MyPosts/>
+            <MyPosts />
           </PrivateRoute>
         ),
+      },
+      {
+        path: "/settings",
+        element: (
+          <PrivateRoute>
+            <Settings />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/profile",
+        element: (
+          <PrivateRoute>
+            <Profile />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/about",
+        Component: About,
       },
       {
         path: "/login",

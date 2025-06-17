@@ -1,16 +1,13 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { FcGoogle } from "react-icons/fc";
 import { FaGithub, FaGoogle } from "react-icons/fa";
 import loginAnimation from "../assets/login.json";
 import Lottie from "lottie-react";
 import { motion } from "framer-motion";
-console.log(motion);
 import Swal from "sweetalert2";
 import { IoCheckmark, IoLogIn, IoKeyOutline } from "react-icons/io5";
 import { HiArrowNarrowRight } from "react-icons/hi";
 import { FaSpinner } from "react-icons/fa";
-import { AuthContext } from "../context/AuthContext";
 import useAuth from "../hooks/useAuth";
 
 const Login = () => {

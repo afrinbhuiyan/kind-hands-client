@@ -9,7 +9,6 @@ import {
 import { RiWhatsappFill } from "react-icons/ri";
 import { IoMdMail, IoMdCall, IoMdTime, IoMdPin } from "react-icons/io";
 import { motion } from "framer-motion";
-console.log(motion)
 import SubscribeButton from "./SubscribeButton";
 
 const containerVariants = {

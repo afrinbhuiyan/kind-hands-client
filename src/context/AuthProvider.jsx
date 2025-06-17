@@ -7,8 +7,6 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  console.log(user)
-
   const googleProvider = new GoogleAuthProvider();
 
   const createUser = (email, password) => {
@@ -32,7 +30,6 @@ const AuthProvider = ({ children }) => {
   };
 
   const updateUserProfile = (profile) => {
-    setLoading(true);
     return updateProfile(auth.currentUser, profile).then(() => {
       setUser({ ...auth.currentUser });
       return true;

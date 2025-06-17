@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -15,7 +15,6 @@ import {
   FaChevronDown,
   FaCalendarAlt,
 } from "react-icons/fa";
-import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { addVolunteerPost } from "../../services/api/addVolunteerApi";
 import useAuth from "../../hooks/useAuth";
 
@@ -40,8 +39,6 @@ const AddVolunteer = () => {
       organizerName: user?.displayName,
       organizerEmail: user?.email,
     };
-
-    console.log(typeof post.volunteersNeeded);
 
     try {
       const data = await addVolunteerPost(post);

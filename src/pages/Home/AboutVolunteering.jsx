@@ -3,12 +3,10 @@ import { motion } from "framer-motion";
 import StatCard from "./StatCard";
 import BenefitCard from "./BenefitCard";
 import TestimonialsSection from "./TestimonialsSection";
-console.log(motion);
 
 const AboutVolunteering = () => {
   return (
     <section className=" bg-white dark:bg-gray-900">
-      {/* Hero Section */}
       <div className="relative overflow-hidden pt-32  dark:from-gray-900 dark:to-gray-800">
         <div className="absolute inset-0 overflow-hidden opacity-20 dark:opacity-10">
           {[...Array(20)].map((_, i) => (

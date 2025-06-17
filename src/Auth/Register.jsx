@@ -1,13 +1,11 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-console.log(motion);
 import Lottie from "lottie-react";
 import Swal from "sweetalert2";
 import { HiArrowNarrowRight } from "react-icons/hi";
 import { FaSpinner, FaGoogle, FaGithub } from "react-icons/fa";
 import registerAnimation from "../assets/register.json";
-import { AuthContext } from "../context/AuthContext";
 import { updateProfile } from "firebase/auth";
 import { ToastContainer, toast } from "react-toastify";
 import useAuth from "../hooks/useAuth";
