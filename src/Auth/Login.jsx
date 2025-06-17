@@ -9,14 +9,14 @@ import { IoCheckmark, IoLogIn, IoKeyOutline } from "react-icons/io5";
 import { HiArrowNarrowRight } from "react-icons/hi";
 import { FaSpinner } from "react-icons/fa";
 import useAuth from "../hooks/useAuth";
+import useDynamicTitle from "../hooks/useDynamicTitle";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const { signInUser, googleLogin } = useAuth();
   const navigate = useNavigate();
-
-  console.log(error);
+  useDynamicTitle("Login Page")
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -9,6 +9,7 @@ import registerAnimation from "../assets/register.json";
 import { updateProfile } from "firebase/auth";
 import { ToastContainer, toast } from "react-toastify";
 import useAuth from "../hooks/useAuth";
+import useDynamicTitle from "../hooks/useDynamicTitle";
 
 const Register = () => {
   const [errors, setErrors] = useState({});
@@ -16,6 +17,8 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { createUser } = useAuth();
+
+  useDynamicTitle("Register page")
 
   const validatePassword = (password) => {
     const errors = [];
