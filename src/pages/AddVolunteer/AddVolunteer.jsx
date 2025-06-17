@@ -20,7 +20,6 @@ import useAuth from "../../hooks/useAuth";
 
 const AddVolunteer = () => {
   const { user } = useAuth();
-  const navigate = useNavigate();
   const [deadline, setDeadline] = useState(new Date());
   useDynamicTitle("Add Volunteer");
 
@@ -51,7 +50,6 @@ const AddVolunteer = () => {
           confirmButtonText: "OK",
         });
         form.reset();
-        navigate("/");
       }
     } catch (error) {
       Swal.fire({

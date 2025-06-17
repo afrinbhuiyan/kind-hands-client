@@ -463,20 +463,7 @@ const Navbar = () => {
                     Add Volunteer
                   </NavLink>
                   <NavLink
-                    to="/add-volunteer-need-post"
-                    onClick={closeMenu}
-                    className={({ isActive }) =>
-                      `block px-3 py-3 rounded-md text-base font-medium transition-colors flex items-center ${
-                        isActive
-                          ? "bg-[#6bd3f3]/10 text-[#024870] dark:text-white font-semibold"
-                          : "text-gray-600 dark:text-gray-300 hover:bg-[#6bd3f3]/10 hover:text-[#024870] dark:hover:text-white"
-                      }`
-                    }
-                  >
-                    Add Volunteer need Post
-                  </NavLink>
-                  <NavLink
-                    to="/manage-my-posts"
+                    to="/my-posts"
                     onClick={closeMenu}
                     className={({ isActive }) =>
                       `block px-3 py-3 rounded-md text-base font-medium transition-colors flex items-center ${

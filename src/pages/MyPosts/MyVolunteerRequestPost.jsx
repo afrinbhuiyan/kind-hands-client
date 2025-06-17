@@ -47,7 +47,14 @@ const MyVolunteerRequestPost = () => {
     if (confirm.isConfirmed) {
       try {
         await deleteVolunteerRequestById(id, user.accessToken);
-        toast.success("Request cancelled successfully.");
+        Swal.fire({
+          title: "Cancel!",
+          text: "Request cancelled successfully.",
+          icon: "success",
+          background: "#F5F4F1",
+          timer: 2000,
+          showConfirmButton: false,
+        });
         setMyRequests((prev) => prev.filter((req) => req._id !== id));
       } catch (error) {
         console.error(error);
@@ -72,65 +79,65 @@ const MyVolunteerRequestPost = () => {
         transition={{ duration: 0.4 }}
       >
         <motion.div
-            className="flex items-center gap-3 mb-3"
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2, duration: 0.4 }}
-          >
-            <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-              <IoDocumentText className="w-6 h-6 text-[#024870] dark:text-[#3b82f6]" />
-            </motion.div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-[#024870] dark:text-white tracking-tight">
-              My Volunteer Requests
-            </h1>
+          className="flex items-center gap-3 mb-3"
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2, duration: 0.4 }}
+        >
+          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
+            <IoDocumentText className="w-6 h-6 text-[#024870] dark:text-[#3b82f6]" />
           </motion.div>
-          <motion.div
-            className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-          >
-            <div className="flex items-center gap-2 w-full sm:w-auto">
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="text-[#024870] dark:text-[#3b82f6]"
-              >
-                <FaChartLine className="w-5 h-5" />
-              </motion.div>
-              <div className="relative flex-1">
-                <div className="h-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                  <motion.div
-                    className="h-full bg-gradient-to-r from-[#024870] to-[#3b82f6] rounded-full"
-                    initial={{ width: 0 }}
-                    animate={{
-                      width: `${Math.min(myRequests.length * 10, 100)}%`,
-                      transition: {
-                        duration: 0.8,
-                        type: "spring",
-                        damping: 10,
-                      },
-                    }}
-                  />
-                </div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#024870] dark:text-white tracking-tight">
+            My Volunteer Requests
+          </h1>
+        </motion.div>
+        <motion.div
+          className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+        >
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="text-[#024870] dark:text-[#3b82f6]"
+            >
+              <FaChartLine className="w-5 h-5" />
+            </motion.div>
+            <div className="relative flex-1">
+              <div className="h-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                <motion.div
+                  className="h-full bg-gradient-to-r from-[#024870] to-[#3b82f6] rounded-full"
+                  initial={{ width: 0 }}
+                  animate={{
+                    width: `${Math.min(myRequests.length * 10, 100)}%`,
+                    transition: {
+                      duration: 0.8,
+                      type: "spring",
+                      damping: 10,
+                    },
+                  }}
+                />
               </div>
             </div>
-            <motion.p
-              className="flex items-center gap-1 text-sm sm:text-base font-medium text-gray-600 dark:text-gray-300"
-              whileHover={{ scale: 1.02 }}
+          </div>
+          <motion.p
+            className="flex items-center gap-1 text-sm sm:text-base font-medium text-gray-600 dark:text-gray-300"
+            whileHover={{ scale: 1.02 }}
+          >
+            <motion.span
+              className="text-[#024870] dark:text-[#3b82f6] font-semibold flex items-center gap-1"
+              animate={{
+                scale: [1, 1.05, 1],
+                transition: { repeat: Infinity, duration: 2 },
+              }}
             >
-              <motion.span
-                className="text-[#024870] dark:text-[#3b82f6] font-semibold flex items-center gap-1"
-                animate={{
-                  scale: [1, 1.05, 1],
-                  transition: { repeat: Infinity, duration: 2 },
-                }}
-              >
-                <FaHandsHelping className="w-4 h-4" />
-                {myRequests.length}
-              </motion.span>
-              {myRequests.length === 1 ? "active request" : "active requests"}
-            </motion.p>
-          </motion.div>
+              <FaHandsHelping className="w-4 h-4" />
+              {myRequests.length}
+            </motion.span>
+            {myRequests.length === 1 ? "active request" : "active requests"}
+          </motion.p>
+        </motion.div>
       </motion.div>
 
       {myRequests.length === 0 ? (

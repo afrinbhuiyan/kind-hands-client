@@ -5,7 +5,7 @@ import loginAnimation from "../assets/login.json";
 import Lottie from "lottie-react";
 import { motion } from "framer-motion";
 import Swal from "sweetalert2";
-import { IoCheckmark, IoLogIn, IoKeyOutline } from "react-icons/io5";
+import { IoCheckmark, IoKeyOutline } from "react-icons/io5";
 import { HiArrowNarrowRight } from "react-icons/hi";
 import { FaSpinner } from "react-icons/fa";
 import useAuth from "../hooks/useAuth";
@@ -96,7 +96,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex flex-col justify-center pb-12 sm:px-6 lg:px-8 items-start">
-      <div className="text-start container mx-auto lg:pl-10">
+      <div className="text-start container mx-auto pl-10">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}

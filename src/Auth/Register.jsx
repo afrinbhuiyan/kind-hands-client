@@ -133,7 +133,7 @@ const Register = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex flex-col justify-center pb-12 sm:px-6 lg:px-8 items-start">
       <ToastContainer />
-      <div className="text-start container mx-auto lg:pl-10">
+      <div className="text-start container mx-auto pl-10">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -206,7 +206,7 @@ const Register = () => {
         </motion.p>
       </div>
 
-      <div className="container mx-auto flex flex-col lg:flex-row-reverse gap-12 px-4 justify-center items-center">
+      <div className="container mx-auto flex flex-col lg:flex-row-reverse gap-12 px-4">
         <motion.div
           initial={{ x: -100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
@@ -224,7 +224,7 @@ const Register = () => {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="flex-1 py-10 px-8 backdrop-blur-lg bg-opacity-90"
+          className="flex-1 py-10 px-8 backdrop-blur-lg bg-opacity-90 lg:mt-8"
         >
           <form onSubmit={handleSubmit} className="space-y-8 relative z-10">
             <motion.div variants={itemVariants}>
