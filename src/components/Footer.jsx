@@ -200,7 +200,7 @@ const Footer = () => {
                   ref={emailRef}
                   type="email"
                   placeholder="Your email address"
-                  className="w-full px-4 py-3 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#6bd3f3] border border-gray-300 placeholder:text-gray-300"
+                  className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6bd3f3] border border-gray-300 placeholder:text-gray-300"
                   required
                   whileFocus={{
                     scale: 1.02,
