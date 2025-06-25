@@ -1,79 +1,107 @@
 # 🤝 Kind Hands – Volunteer Management Platform
 
-A modern volunteer management web application built with **React + Vite**, powered by **Firebase Authentication**, and styled with **Tailwind CSS + DaisyUI**.
+![Project Banner](https://via.placeholder.com/1200x400/4F46E5/FFFFFF?text=Kind+Hands+Volunteer+Platform)
 
-> 🔐 Firebase handles authentication (email/password & social login). The app supports creating posts, managing volunteer requests, and displaying content responsively and beautifully.
+A full-stack platform connecting organizations with volunteers through secure, real-time coordination.
 
----
+## 🌟 Live Demos
 
-## 🔗 Project Links
+- Live Client: https://kind-hands-50929.web.app/
+- Live Server: https://kind-hands-server.vercel.app//
+- Server Repo: https://github.com/afrinbhuiyan/kind-hands-server-site
 
-- 🔴 [Live Client Site](https://kind-hands-50929.web.app/)
-- 🟠 [Server Repository](https://github.com/afrinbhuiyan/kind-hands-server-site)
-- 🟡 [Client Repository](https://github.com/Programming-Hero-Web-Course4/b11a11-client-side-afrinbhuiyan)
+## ✨ Key Features
 
----
+### 🔒 Security
 
-## 🎯 Project Purpose
+- Firebase Authentication (Email/Google)
+- JWT Protected Routes
+- Role-Based Access Control
 
-To build a volunteer management system where:
-- Users can create, update, and delete volunteer posts
-- Other users can join these posts as volunteers
-- Each user has a dashboard to view their own posts
-- JWT-secured routes ensure data protection
-- Clean, user-friendly UI/UX is prioritized
+### 📊 Volunteer Management
 
----
+- Create/Edit/Delete Volunteer Posts
+- Real-Time Request System
+- Personalized User Dashboards
+- Advanced Search & Filtering
 
-## 🚀 Key Features
+### 🎨 Modern UI/UX
 
-- 🔐 **Firebase Authentication** (email/password + social login)
-- ✍ **Create / Update / Delete** volunteer need posts
-- 🙋‍♂️ **Be a Volunteer** – users can request to join posts
-- 📋 **My Posts** – view and manage your created posts
-- 🌓 **Dark/Light Theme Toggle**
-- 🖼️ **Responsive, animated UI** with motion effects
-- 🔐 **JWT Authentication** for protected route access
-- 📦 **RESTful API** backend integration
-- 🧾 **Search / Filter** volunteer posts
-- 📌 **Copy to Clipboard** share feature
+- Dark/Light Mode Toggle
+- Fluid Animations (Framer Motion)
+- Mobile-First Responsive Design
+- Interactive Data Visualization
 
----
+## 🛠 Tech Stack
 
-## 📦 NPM Packages Used
+### Frontend
 
-| Purpose                | Packages                                                                 |
-|------------------------|--------------------------------------------------------------------------|
-| **Framework & Routing**| react, react-dom, react-router-dom                                       |
-| **Styling**            | tailwindcss, daisyui, Mamba Ui                          |
-| **Firebase Auth**      | firebase                                                                 |
-| **UI Enhancements**    | framer-motion, lottie-react, swiper, react-icons, react-toastify         |
-| **Animation & Effects**| react-spring, react-countup, react-datepicker, react-tooltip             |
-| **State & Requests**   | axios                                                                    |
-| **Notifications**      | sweetalert2, sonner, reapop                                              |
-| **Utilities**          | react-helmet-async, react-spinners                                       |
-| **Build Tools**        | vite, @vitejs/plugin-react                                               |
-| **Linting**            | eslint, eslint-plugin-react-hooks, eslint-plugin-react-refresh           |
+| Category   | Technologies               |
+| ---------- | -------------------------- |
+| Core       | React 18 + Vite            |
+| State      | Context API + Custom Hooks |
+| Styling    | Tailwind CSS + DaisyUI     |
+| Animation  | Framer Motion, Lottie      |
+| UI Library | Flowbite, React Icons      |
 
----
+### Backend
 
-📁 Folder Structure Overview
+| Category   | Technologies         |
+| ---------- | -------------------- |
+| Server     | Node.js + Express    |
+| Database   | MongoDB Atlas        |
+| Auth       | Firebase Admin + JWT |
+| API Design | RESTful Architecture |
 
-src/
-├── Auth/                 # Login, Register, AuthContext
-├── components/           # Navbar, Footer, Spinner, etc.
-├── layouts/              # Main layout wrapper
-├── pages/                # Home, Posts, MyPosts, AddVolunteer, etc.
-├── routes/               # Private route setup
-├── services/api/         # API abstraction
-├── firebase/             # Firebase config
-├── hooks/                # Custom hooks
-└── main.jsx              # App entry point
+## 💻 How to Run Locally
 
+### Backend (Server)
 
-## 🔧 Installation
+1. Clone the repo:
+   `git clone https://github.com/afrinbhuiyan/kind-hands-server-site.git`
 
-```bash
-# 1. Clone the repo
-git clone https://github.com/your-username/kind-hands-client.git
-cd kind-hands-client
+2. Navigate into the folder:
+   `cd kind-hands-server-site`
+
+3. Install dependencies:
+   `npm install`
+
+4. Create a .env file with:
+
+markdown
+Copy
+Edit
+
+5. Start the server:
+   `nodemon index.js`
+
+Server will run at http://localhost:3000
+
+### Frontend (Client)
+
+1. Clone the repo:
+   `git clone https://github.com/afrinbhuiyan/kind-hands-client.git`
+
+2. Navigate into the folder:
+   `cd kind-hands-client`
+
+3. Install dependencies:
+   `npm install`
+
+4. Start the client:
+   `npm run dev`
+
+Client will run at http://localhost:5173
+
+## 📄 License
+
+This project is under the MIT License. Feel free to use, modify, and contribute.
+
+## 🧠 Author
+
+Mst Afrin  
+📍 Dhaka, Bangladesh  
+Email: mstafrinbhuiyan@gmail.com  
+GitHub: https://github.com/afrinbhuiyan
+
+Built with ❤️ using React, Firebase, Node.js, and Tailwind CSS.
