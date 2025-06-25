@@ -1,6 +1,6 @@
 # 🤝 Kind Hands – Volunteer Management Platform
 
-![Project Banner](https://raw.githubusercontent.com/afrinbhuiyan/kind-hands-client/main/public/screenshot.png)
+![Kind Hands Banner](https://raw.githubusercontent.com/afrinbhuiyan/kind-hands-client/main/assets/screenshot.png)
 
 A full-stack platform connecting organizations with volunteers through secure, real-time coordination.
 
