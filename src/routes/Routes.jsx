@@ -12,6 +12,9 @@ import MyPosts from "../pages/MyPosts/MyPosts";
 import Settings from "../pages/Settings";
 import Profile from "../pages/Profile";
 import About from "../pages/About";
+import DashboardLayout from "../layouts/DashboardLayout";
+import DashboardHome from "../pages/DashboardHome/DashboardHome";
+import MyVolunteerRequestPost from "../pages/MyRequest/MyVolunteerRequestPost";
 
 export const router = createBrowserRouter([
   {
@@ -22,14 +25,6 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <Home />,
-      },
-      {
-        path: "/add-volunteer",
-        element: (
-          <PrivateRoute>
-            <AddVolunteer />
-          </PrivateRoute>
-        ),
       },
       {
         path: "/volunteers",
@@ -44,30 +39,6 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "/my-posts",
-        element: (
-          <PrivateRoute>
-            <MyPosts />
-          </PrivateRoute>
-        ),
-      },
-      {
-        path: "/settings",
-        element: (
-          <PrivateRoute>
-            <Settings />
-          </PrivateRoute>
-        ),
-      },
-      {
-        path: "/profile",
-        element: (
-          <PrivateRoute>
-            <Profile />
-          </PrivateRoute>
-        ),
-      },
-      {
         path: "/about",
         Component: About,
       },
@@ -78,6 +49,40 @@ export const router = createBrowserRouter([
       {
         path: "/register",
         element: <Register />,
+      },
+    ],
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <PrivateRoute>
+        <DashboardLayout />
+      </PrivateRoute>
+    ),
+    children: [
+      {
+        index: true,
+        Component: DashboardHome,
+      },
+      {
+        path: "add-volunteer",
+        Component: AddVolunteer ,
+      },
+      {
+        path: "my-posts",
+        Component: MyPosts,
+      },
+      {
+        path: "my-requests",
+        Component: MyVolunteerRequestPost,
+      },
+      {
+        path: "settings",
+        Component: Settings,
+      },
+      {
+        path: "profile",
+        Component: Profile,
       },
     ],
   },

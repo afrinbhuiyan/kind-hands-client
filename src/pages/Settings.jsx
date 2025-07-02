@@ -106,9 +106,9 @@ const Settings = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
-      className="max-w-4xl mx-auto px-4 py-8"
+      className="px-4 py-8"
     >
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+      <div className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700">
         <div className="border-b border-gray-200 dark:border-gray-700 p-6">
           <div className="flex items-center">
             <FiSettings className="w-6 h-6 text-[#024870] dark:text-[#6bd3f3] mr-3" />

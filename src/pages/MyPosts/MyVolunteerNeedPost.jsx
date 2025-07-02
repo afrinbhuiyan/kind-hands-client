@@ -93,7 +93,7 @@ const MyVolunteerNeedPost = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-4">
+    <div className="px-2 sm:px-4 lg:px-6 py-4">
       <UpdatePostModal
         isOpen={isModalOpen}
         onClose={closeModal}
@@ -102,7 +102,7 @@ const MyVolunteerNeedPost = () => {
       />
 
       <motion.div
-        className="relative mb-6 sm:mb-8 md:mb-12 p-4 sm:p-6 md:p-8 rounded-xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 shadow-lg"
+        className="relative mb-6 sm:mb-8 md:mb-12 p-4 sm:p-6 md:p-8 rounded-xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}

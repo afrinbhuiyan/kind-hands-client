@@ -1,16 +1,14 @@
 import { Link, NavLink } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
-import { IoIosArrowDown, IoMdLogOut } from "react-icons/io";
-import { FiSettings } from "react-icons/fi";
+import { IoMdLogOut } from "react-icons/io";
 import { useState, useEffect } from "react";
-import { AuthContext } from "../context/AuthContext";
-import navLogo from "../assets/navLogo.png";
-import SearchBar from "./SearchBar";
-import ThemeToggle from "./ThemeToggle";
+import navLogo from "../../assets/navLogo.png";
+import SearchBar from "../SearchBar";
+import ThemeToggle from "../ThemeToggle";
 import { MdClose, MdMenu } from "react-icons/md";
 import { motion, AnimatePresence } from "framer-motion";
-import useAuth from "../hooks/useAuth";
-import useIsActivePath from "../hooks/useIsActivePath";
+import useAuth from "../../hooks/useAuth";
+import useIsActivePath from "../../hooks/useIsActivePath";
 import { toast, ToastContainer } from "react-toastify";
 
 const Navbar = () => {
@@ -94,7 +92,7 @@ const Navbar = () => {
 
   return (
     <header className="sticky top-0 z-50">
-      <ToastContainer/>
+      <ToastContainer />
       <nav
         className={`bg-white dark:bg-gray-900 transition-all duration-300 ${
           isScrolled ? "shadow-md" : "shadow-sm"
@@ -178,56 +176,18 @@ const Navbar = () => {
 
                 {user && (
                   <>
-                    <div className="dropdown dropdown-hover dropdown-end">
-                      <div tabIndex={0} role="button" className="m-1">
-                        <div
-                          className={`px-3 py-2 flex items-center text-sm font-medium rounded-md transition-all gap-2 ${
-                            isProfileActive
-                              ? "text-[#024870] dark:text-white font-semibold bg-[#6bd3f3]/10"
-                              : "text-gray-600 dark:text-gray-300 hover:text-[#024870] dark:hover:text-white hover:bg-[#6bd3f3]/10"
-                          }`}
-                        >
-                          My Profile
-                          <IoIosArrowDown className="text-xs transition-transform duration-200" />
-                        </div>
-                      </div>
-
-                      <ul
-                        tabIndex={0}
-                        className="dropdown-content z-[1] menu p-2 shadow bg-white dark:bg-gray-800 rounded-box w-52 border border-gray-200 dark:border-gray-700"
-                      >
-                        <li>
-                          <NavLink
-                            to="/add-volunteer"
-                            className={({ isActive }) =>
-                              `px-3 py-2 text-sm rounded-md transition-all ${
-                                isActive
-                                  ? "text-[#024870] dark:text-white font-semibold bg-[#6bd3f3]/10"
-                                  : "text-gray-600 dark:text-gray-300 hover:text-[#024870] dark:hover:text-white hover:bg-[#6bd3f3]/10"
-                              }`
-                            }
-                            onClick={closeMenu}
-                          >
-                            Add Volunteer
-                          </NavLink>
-                        </li>
-                        <li>
-                          <NavLink
-                            to="/my-posts"
-                            className={({ isActive }) =>
-                              `px-3 py-2 text-sm rounded-md transition-all ${
-                                isActive
-                                  ? "text-[#024870] dark:text-white font-semibold bg-[#6bd3f3]/10"
-                                  : "text-gray-600 dark:text-gray-300 hover:text-[#024870] dark:hover:text-white hover:bg-[#6bd3f3]/10"
-                              }`
-                            }
-                            onClick={closeMenu}
-                          >
-                            Manage My Posts
-                          </NavLink>
-                        </li>
-                      </ul>
-                    </div>
+                    <NavLink
+                      to="/dashboard"
+                      className={({ isActive }) =>
+                        `px-3 py-2 flex items-center text-sm font-medium rounded-md transition-all ${
+                          isActive
+                            ? "text-[#024870] dark:text-white font-semibold bg-[#6bd3f3]/10"
+                            : "text-gray-600 dark:text-gray-300 hover:text-[#024870] dark:hover:text-white hover:bg-[#6bd3f3]/10"
+                        }`
+                      }
+                    >
+                      Dashboard
+                    </NavLink>
                   </>
                 )}
               </div>
@@ -289,24 +249,6 @@ const Navbar = () => {
                           <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                             {user.email}
                           </p>
-                        </div>
-                        <div className="py-1">
-                          <Link
-                            to="/profile"
-                            className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-[#6bd3f3]/10 hover:text-[#024870] dark:hover:text-white transition-colors"
-                            onClick={() => setIsProfileOpen(false)}
-                          >
-                            <FaUserCircle className="mr-2 text-[#024870] dark:text-[#6bd3f3]" />
-                            Profile
-                          </Link>
-                          <Link
-                            to="/settings"
-                            className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-[#6bd3f3]/10 hover:text-[#024870] dark:hover:text-white transition-colors"
-                            onClick={() => setIsProfileOpen(false)}
-                          >
-                            <FiSettings className="mr-2 text-[#024870] dark:text-[#6bd3f3]" />
-                            Settings
-                          </Link>
                         </div>
                         <div className="py-1">
                           <button
@@ -450,7 +392,7 @@ const Navbar = () => {
               {user && (
                 <>
                   <NavLink
-                    to="/add-volunteer"
+                    to="/dashboard/add-volunteer"
                     onClick={closeMenu}
                     className={({ isActive }) =>
                       `block px-3 py-3 rounded-md text-base font-medium transition-colors flex items-center ${
@@ -463,7 +405,7 @@ const Navbar = () => {
                     Add Volunteer
                   </NavLink>
                   <NavLink
-                    to="/my-posts"
+                    to="dashboard/my-posts"
                     onClick={closeMenu}
                     className={({ isActive }) =>
                       `block px-3 py-3 rounded-md text-base font-medium transition-colors flex items-center ${
@@ -481,20 +423,6 @@ const Navbar = () => {
               <div className="pt-2 border-t border-gray-200 dark:border-gray-700 mt-2">
                 {user ? (
                   <>
-                    <Link
-                      to="/profile"
-                      onClick={closeMenu}
-                      className="block px-3 py-3 rounded-md text-base font-medium text-gray-600 dark:text-gray-300 hover:bg-[#6bd3f3]/10 hover:text-[#024870] dark:hover:text-white transition-colors flex items-center"
-                    >
-                      <FaUserCircle className="mr-3" /> Profile
-                    </Link>
-                    <Link
-                      to="/settings"
-                      onClick={closeMenu}
-                      className="block px-3 py-3 rounded-md text-base font-medium text-gray-600 dark:text-gray-300 hover:bg-[#6bd3f3]/10 hover:text-[#024870] dark:hover:text-white transition-colors flex items-center"
-                    >
-                      <FiSettings className="mr-3" /> Settings
-                    </Link>
                     <button
                       onClick={() => {
                         handleLogout();

@@ -70,7 +70,7 @@ const MyVolunteerRequestPost = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-4"
+      className="px-3 sm:px-4 md:px-6 py-4"
     >
       <motion.div
         className="mb-8 sm:mb-10 relative"

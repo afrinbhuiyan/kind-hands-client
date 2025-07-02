@@ -139,7 +139,7 @@ const Profile = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
-      className="max-w-7xl mx-auto px-4 py-8"
+      className="px-4 py-8"
     >
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700 mb-8">
         <div className="relative">
