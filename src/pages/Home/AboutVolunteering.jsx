@@ -3,11 +3,12 @@ import { motion } from "framer-motion";
 import StatCard from "./StatCard";
 import BenefitCard from "./BenefitCard";
 import TestimonialsSection from "./TestimonialsSection";
+import { Link } from "react-router-dom";
 
 const AboutVolunteering = () => {
   return (
     <section className=" bg-white dark:bg-gray-900">
-      <div className="relative overflow-hidden pt-32  dark:from-gray-900 dark:to-gray-800">
+      <div className="relative overflow-hidden pt-24  dark:from-gray-900 dark:to-gray-800">
         <div className="absolute inset-0 overflow-hidden opacity-20 dark:opacity-10">
           {[...Array(20)].map((_, i) => (
             <motion.div
@@ -35,7 +36,7 @@ const AboutVolunteering = () => {
 
         <div className="container mx-auto px-6 text-center relative z-10">
           <motion.h1
-            className="text-5xl md:text-5xl font-light mb-6 text-gray-900 dark:text-white"
+            className="text-5xl md:text-5xl font-light text-gray-900 dark:text-white"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -86,7 +87,7 @@ const AboutVolunteering = () => {
       <BenefitCard />
 
       {/* Testimonials Section */}
-      <TestimonialsSection/>
+      <TestimonialsSection />
 
       {/* CTA Section */}
       <motion.div
@@ -159,7 +160,9 @@ const AboutVolunteering = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <span className="relative z-10">Become a Volunteer</span>
+              <span className="relative z-10">
+                <Link to={"/volunteers"}>Become a Volunteer </Link>
+              </span>
               <div className="absolute inset-0 bg-gradient-to-r from-[#18c9ff] to-[#074c61] dark:from-[#0066ff] dark:to-[#6bd3f3] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </motion.button>
 
@@ -168,7 +171,9 @@ const AboutVolunteering = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <span className="relative z-10">Learn More</span>
+              <span className="relative z-10">
+                <Link to={"/about"}>Learn More</Link>
+              </span>
               <div className="absolute inset-0 bg-[#074c6110] dark:bg-[#6bd3f310] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </motion.button>
           </motion.div>

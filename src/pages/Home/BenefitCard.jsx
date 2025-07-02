@@ -30,7 +30,7 @@ const BenefitCard = () => {
   ];
 
   return (
-    <div className="container mx-auto px-6 pt-16">
+    <div className="container mx-auto px-6 pt-20">
       <motion.h2
         className="text-4xl font-serif font-medium text-center text-gray-900 dark:text-white mb-16 px-8 relative"
         initial={{ opacity: 0, y: 20 }}

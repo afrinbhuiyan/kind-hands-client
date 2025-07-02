@@ -29,7 +29,7 @@ const TestimonialsSection = () => {
   ];
 
   return (
-    <section className="py-16 bg-white dark:bg-gray-900">
+    <section className="pt-20 bg-white dark:bg-gray-900">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-4xl font-serif font-medium text-center text-gray-900 dark:text-white mb-16 px-8 relative">
           <span className="relative inline-block px-6 py-2">

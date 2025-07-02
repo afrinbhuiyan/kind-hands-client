@@ -15,6 +15,7 @@ import About from "../pages/About";
 import DashboardLayout from "../layouts/DashboardLayout";
 import DashboardHome from "../pages/DashboardHome/DashboardHome";
 import MyVolunteerRequestPost from "../pages/MyRequest/MyVolunteerRequestPost";
+import ContactPage from "../pages/ContactPage/ContactPage";
 
 export const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ export const router = createBrowserRouter([
       {
         path: "/about",
         Component: About,
+      },
+      {
+        path: "/contact",
+        Component: ContactPage,
       },
       {
         path: "/login",

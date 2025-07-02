@@ -10,6 +10,7 @@ import { RiWhatsappFill } from "react-icons/ri";
 import { IoMdMail, IoMdCall, IoMdTime, IoMdPin } from "react-icons/io";
 import { motion } from "framer-motion";
 import SubscribeButton from "./SubscribeButton";
+import { Link } from "react-router-dom";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -42,7 +43,7 @@ const socialIconVariants = {
 };
 
 const Footer = () => {
-  const emailRef = useRef(); 
+  const emailRef = useRef();
 
   return (
     <motion.footer
@@ -64,7 +65,7 @@ const Footer = () => {
                 animate={{ rotate: [0, 10, -10, 0] }}
                 transition={{ duration: 1, repeat: Infinity, repeatDelay: 5 }}
               >
-                <img className="w-10 mr-2" src="public/logo.png" alt="" />
+                <img className="w-10 mr-2" src="../../public/logo.png" alt="" />
               </motion.div>
               <h3 className="text-2xl font-bold">
                 KIND<span className="text-[#6bd3f3]">HANDS</span>
@@ -97,36 +98,35 @@ const Footer = () => {
             </div>
           </motion.div>
 
-          {/* Quick Links */}
           <motion.div variants={itemVariants} className="mb-6">
             <h3 className="text-lg font-semibold mb-4 border-b border-[#6bd3f3] pb-2">
               Quick Links
             </h3>
             <ul className="space-y-2">
               {[
-                "Home",
-                "About Us",
-                "Opportunities",
-                "Success Stories",
-                "Contact Us",
+                { name: "Home", path: "/" },
+                { name: "About Us", path: "/about" },
+                { name: "Opportunities", path: "/volunteers" },
+                { name: "Success Stories", path: "/success-stories" },
+                { name: "Contact Us", path: "/contact" },
               ].map((link) => (
                 <motion.li
-                  key={link}
+                  key={link.name}
                   whileHover={{ x: 5 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
-                  <a
-                    href="#"
+                  <Link
+                    to={link.path}
                     className="relative text-gray-300 hover:text-[#6bd3f3] transition-colors inline-block pb-1"
                   >
-                    {link}
+                    {link.name}
                     <motion.span
                       className="absolute left-0 bottom-0 w-0 h-[2px] bg-[#6bd3f3]"
                       initial={{ width: 0 }}
                       whileHover={{ width: "100%" }}
                       transition={{ duration: 0.3, ease: "easeOut" }}
                     />
-                  </a>
+                  </Link>
                 </motion.li>
               ))}
             </ul>
