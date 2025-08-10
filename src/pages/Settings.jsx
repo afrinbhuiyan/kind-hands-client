@@ -97,7 +97,6 @@ const Settings = () => {
   };
 
   const confirmAccountDeletion = () => {
-    // console.log("Account deletion confirmed");
     setShowDeleteConfirm(false);
   };
 
