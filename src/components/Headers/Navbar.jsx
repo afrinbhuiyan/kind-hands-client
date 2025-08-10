@@ -214,34 +214,30 @@ const Navbar = () => {
               </div>
 
               {user ? (
-                <div
-                  className="relative profile-dropdown"
-                  onMouseEnter={() => {
-                    setIsProfileOpen(true);
-                  }}
-                  onMouseLeave={() => {
-                    setIsProfileOpen(false);
-                  }}
-                >
+                <div className="relative profile-dropdown">
                   <button
                     onClick={() => setIsProfileOpen(!isProfileOpen)}
                     className="flex items-center focus:outline-none"
                     aria-label="User profile"
+                    aria-expanded={isProfileOpen}
+                    aria-haspopup="true"
                   >
                     {user.photoURL ? (
                       <motion.img
                         src={user.photoURL}
-                        alt={user.displayName}
-                        className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-[#6bd3f3] object-cover"
+                        alt={user.displayName || "User profile"}
+                        className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border-2 border-[#6bd3f3] object-cover"
                         whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
                         transition={{ type: "spring", stiffness: 400 }}
                       />
                     ) : (
                       <motion.div
                         whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
                         transition={{ type: "spring", stiffness: 400 }}
                       >
-                        <FaUserCircle className="text-[#024870] dark:text-white text-xl sm:text-2xl hover:text-[#6bd3f3] transition-colors" />
+                        <FaUserCircle className="text-[#024870] dark:text-white text-2xl sm:text-3xl hover:text-[#6bd3f3] transition-colors" />
                       </motion.div>
                     )}
                   </button>
@@ -253,11 +249,15 @@ const Navbar = () => {
                         animate="visible"
                         exit="exit"
                         variants={dropdownVariants}
-                        className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-50 border border-gray-200 dark:border-gray-700 divide-y divide-gray-100 dark:divide-gray-700"
+                        className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-50 border border-gray-200 dark:border-gray-700 divide-y divide-gray-100 dark:divide-gray-700 focus:outline-none"
+                        role="menu"
+                        aria-orientation="vertical"
+                        aria-labelledby="user-menu"
+                        tabIndex={-1}
                       >
                         <div className="px-4 py-3">
                           <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                            {user.displayName}
+                            {user.displayName || "User"}
                           </p>
                           <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                             {user.email}
@@ -269,7 +269,9 @@ const Navbar = () => {
                               handleLogout();
                               setIsProfileOpen(false);
                             }}
-                            className="w-full text-left flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-[#6bd3f3]/10 hover:text-[#024870] dark:hover:text-white transition-colors"
+                            className="w-full text-left flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-[#6bd3f3]/10 hover:text-[#024870] dark:hover:text-white transition-colors focus:outline-none focus:bg-[#6bd3f3]/10"
+                            role="menuitem"
+                            tabIndex={-1}
                           >
                             <IoMdLogOut className="mr-2 text-[#024870] dark:text-[#6bd3f3]" />
                             Sign out
@@ -401,20 +403,6 @@ const Navbar = () => {
                 FAQ
               </NavLink>
 
-              <NavLink
-                to="/contact"
-                onClick={closeMenu}
-                className={({ isActive }) =>
-                  `block px-3 py-3 rounded-md text-base font-medium transition-colors flex items-center ${
-                    isActive
-                      ? "bg-[#6bd3f3]/10 text-[#024870] dark:text-white font-semibold"
-                      : "text-gray-600 dark:text-gray-300 hover:bg-[#6bd3f3]/10 hover:text-[#024870] dark:hover:text-white"
-                  }`
-                }
-              >
-                Contact
-              </NavLink>
-
               {user && (
                 <>
                   <NavLink
@@ -431,7 +419,7 @@ const Navbar = () => {
                     Add Volunteer
                   </NavLink>
                   <NavLink
-                    to="dashboard/my-posts"
+                    to="/dashboard/my-posts"
                     onClick={closeMenu}
                     className={({ isActive }) =>
                       `block px-3 py-3 rounded-md text-base font-medium transition-colors flex items-center ${
