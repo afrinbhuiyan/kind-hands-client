@@ -216,7 +216,7 @@ const MyVolunteerRequestPost = () => {
                         {req.title}
                       </div>
                     </td>
-                    <td className="px-3 sm:px-4 md:px-6 py-3 whitespace-nowrap hidden sm:table-cell">
+                    <td className="px-3 sm:px-4 md:px-6 py-3 hidden sm:table-cell">
                       <span className="px-2 py-1 text-xs font-semibold rounded-full bg-[#024870]/10 dark:bg-[#1e3a8a]/20 text-[#024870] dark:text-[#3b82f6]">
                         {req.category}
                       </span>
