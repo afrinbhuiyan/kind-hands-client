@@ -12,7 +12,7 @@ import {
   FaGraduationCap,
 } from "react-icons/fa";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import useAuth from "../hooks/useAuth";
 import useDynamicTitle from "../hooks/useDynamicTitle";
@@ -25,24 +25,49 @@ const Profile = () => {
   const [activeTab, setActiveTab] = useState("overview");
   useDynamicTitle("Profile");
 
+  // Initialize editData with user data
   const [editData, setEditData] = useState({
-    displayName: user?.displayName || "",
-    email: user?.email || "",
-    phoneNumber: user?.phoneNumber || "",
-    photoURL: user?.photoURL || "",
-    bio: user?.bio || "",
-    skills: user?.skills || [],
-    social: user?.social || {
+    displayName: "",
+    email: "",
+    phoneNumber: "",
+    photoURL: "",
+    bio: "",
+    skills: [],
+    social: {
       linkedin: "",
       github: "",
       twitter: "",
       website: "",
     },
-    location: user?.location || "",
-    experience: user?.experience || [],
-    education: user?.education || [],
-    currentPosition: user?.currentPosition || "",
+    location: "",
+    experience: [],
+    education: [],
+    currentPosition: "",
   });
+
+  // Sync editData when user data changes
+  useEffect(() => {
+    if (user) {
+      setEditData({
+        displayName: user.displayName || "",
+        email: user.email || "",
+        phoneNumber: user.phoneNumber || "",
+        photoURL: user.photoURL || "",
+        bio: user.bio || "",
+        skills: user.skills || [],
+        social: user.social || {
+          linkedin: "",
+          github: "",
+          twitter: "",
+          website: "",
+        },
+        location: user.location || "",
+        experience: user.experience || [],
+        education: user.education || [],
+        currentPosition: user.currentPosition || "",
+      });
+    }
+  }, [user]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -70,13 +95,13 @@ const Profile = () => {
 
   const handleExperienceChange = (index, field, value) => {
     const updatedExperience = [...editData.experience];
-    updatedExperience[index][field] = value;
+    updatedExperience[index] = { ...updatedExperience[index], [field]: value };
     setEditData((prev) => ({ ...prev, experience: updatedExperience }));
   };
 
   const handleEducationChange = (index, field, value) => {
     const updatedEducation = [...editData.education];
-    updatedEducation[index][field] = value;
+    updatedEducation[index] = { ...updatedEducation[index], [field]: value };
     setEditData((prev) => ({ ...prev, education: updatedEducation }));
   };
 
@@ -131,7 +156,7 @@ const Profile = () => {
   };
 
   if (authLoading || !user) {
-    return <Spinner/>
+    return <Spinner />;
   }
 
   return (
@@ -139,8 +164,9 @@ const Profile = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
-      className="px-4 py-8"
+      className="px-4 py-8 max-w-7xl mx-auto"
     >
+      {/* Profile Header */}
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700 mb-8">
         <div className="relative">
           <div className="h-48 bg-gradient-to-r from-[#024870] to-[#6bd3f3] relative overflow-hidden">
@@ -149,18 +175,25 @@ const Profile = () => {
           <div className="absolute -bottom-20 left-8">
             <div className="relative group">
               {user.photoURL ? (
-                <img
+                <motion.img
                   src={user.photoURL}
-                  alt={user.displayName}
-                  className="w-40 h-40 rounded-full border-4 border-white dark:border-gray-800 object-cover shadow-lg transition-transform group-hover:scale-105"
+                  alt={user.displayName || "User profile"}
+                  className="w-40 h-40 rounded-full border-4 border-white dark:border-gray-800 object-cover shadow-lg"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ type: "spring", stiffness: 400 }}
                 />
               ) : (
-                <FaUserCircle className="w-40 h-40 text-white bg-gray-300 dark:bg-gray-600 rounded-full border-4 border-white dark:border-gray-800 shadow-lg" />
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ type: "spring", stiffness: 400 }}
+                >
+                  <FaUserCircle className="w-40 h-40 text-white bg-gray-300 dark:bg-gray-600 rounded-full border-4 border-white dark:border-gray-800 shadow-lg" />
+                </motion.div>
               )}
               <button
                 onClick={() => setIsEditing(!isEditing)}
-                className="absolute bottom-2 right-2 bg-[#024870] text-white p-2 rounded-full hover:bg-[#013456] shadow-md transition-all transform hover:scale-110"
-                title="Edit Profile"
+                className="absolute bottom-2 right-2 bg-[#024870] text-white p-2 rounded-full hover:bg-[#013456] shadow-md transition-all transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#024870]"
+                aria-label="Edit profile"
               >
                 <FaEdit className="w-5 h-5" />
               </button>
@@ -187,7 +220,7 @@ const Profile = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[#0077b5] hover:text-[#005582] transition-colors"
-                  title="LinkedIn"
+                  aria-label="LinkedIn profile"
                 >
                   <FaLinkedin className="w-6 h-6" />
                 </a>
@@ -198,7 +231,7 @@ const Profile = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
-                  title="GitHub"
+                  aria-label="GitHub profile"
                 >
                   <FaGithub className="w-6 h-6" />
                 </a>
@@ -209,7 +242,7 @@ const Profile = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[#1DA1F2] hover:text-[#1991db] transition-colors"
-                  title="Twitter"
+                  aria-label="Twitter profile"
                 >
                   <FaTwitter className="w-6 h-6" />
                 </a>
@@ -220,7 +253,7 @@ const Profile = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
-                  title="Website"
+                  aria-label="Personal website"
                 >
                   <FaGlobe className="w-6 h-6" />
                 </a>
@@ -248,8 +281,11 @@ const Profile = () => {
         </div>
       </div>
 
+      {/* Main Content */}
       <div className="flex flex-col lg:flex-row gap-8">
+        {/* Left Column */}
         <div className="lg:w-1/3 space-y-6">
+          {/* Skills Section */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 p-6">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
@@ -263,7 +299,7 @@ const Profile = () => {
                       skills: [...prev.skills, ""],
                     }))
                   }
-                  className="text-sm text-[#024870] dark:text-[#6bd3f3] hover:underline"
+                  className="text-sm text-[#024870] dark:text-[#6bd3f3] hover:underline focus:outline-none"
                 >
                   + Add Skill
                 </button>
@@ -309,6 +345,7 @@ const Profile = () => {
             )}
           </div>
 
+          {/* Contact Information Section */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 p-6">
             <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
               Contact Information
@@ -335,6 +372,7 @@ const Profile = () => {
                     label="Phone"
                     value={editData.phoneNumber}
                     onChange={handleInputChange}
+                    type="tel"
                   />
                   <Input
                     name="location"
@@ -347,6 +385,7 @@ const Profile = () => {
             </div>
           </div>
 
+          {/* Social Links Section */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 p-6">
             <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
               Social Links
@@ -358,24 +397,28 @@ const Profile = () => {
                   label="LinkedIn URL"
                   value={editData.social.linkedin}
                   onChange={handleSocialChange}
+                  type="url"
                 />
                 <Input
                   name="github"
                   label="GitHub URL"
                   value={editData.social.github}
                   onChange={handleSocialChange}
+                  type="url"
                 />
                 <Input
                   name="twitter"
                   label="Twitter URL"
                   value={editData.social.twitter}
                   onChange={handleSocialChange}
+                  type="url"
                 />
                 <Input
                   name="website"
                   label="Website URL"
                   value={editData.social.website}
                   onChange={handleSocialChange}
+                  type="url"
                 />
               </div>
             ) : (
@@ -420,7 +463,10 @@ const Profile = () => {
             )}
           </div>
         </div>
+
+        {/* Right Column */}
         <div className="lg:w-2/3">
+          {/* Tabs */}
           <div className="flex border-b border-gray-200 dark:border-gray-700 mb-6">
             <button
               onClick={() => setActiveTab("overview")}
@@ -428,7 +474,8 @@ const Profile = () => {
                 activeTab === "overview"
                   ? "text-[#024870] dark:text-[#6bd3f3] border-b-2 border-[#024870] dark:border-[#6bd3f3]"
                   : "text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
-              }`}
+              } focus:outline-none`}
+              aria-label="Overview tab"
             >
               Overview
             </button>
@@ -438,7 +485,8 @@ const Profile = () => {
                 activeTab === "experience"
                   ? "text-[#024870] dark:text-[#6bd3f3] border-b-2 border-[#024870] dark:border-[#6bd3f3]"
                   : "text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
-              }`}
+              } focus:outline-none`}
+              aria-label="Experience tab"
             >
               Experience
             </button>
@@ -448,12 +496,14 @@ const Profile = () => {
                 activeTab === "education"
                   ? "text-[#024870] dark:text-[#6bd3f3] border-b-2 border-[#024870] dark:border-[#6bd3f3]"
                   : "text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
-              }`}
+              } focus:outline-none`}
+              aria-label="Education tab"
             >
               Education
             </button>
           </div>
 
+          {/* Tab Content */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 p-6">
             {activeTab === "overview" && (
               <div>
@@ -502,7 +552,7 @@ const Profile = () => {
                   {isEditing && (
                     <button
                       onClick={addExperience}
-                      className="flex items-center text-sm text-[#024870] dark:text-[#6bd3f3] hover:underline"
+                      className="flex items-center text-sm text-[#024870] dark:text-[#6bd3f3] hover:underline focus:outline-none"
                     >
                       <FaBriefcase className="mr-1" /> Add Experience
                     </button>
@@ -570,7 +620,7 @@ const Profile = () => {
                         />
                         <button
                           onClick={() => removeExperience(index)}
-                          className="mt-2 text-sm text-red-500 hover:text-red-700"
+                          className="mt-2 text-sm text-red-500 hover:text-red-700 focus:outline-none"
                         >
                           Remove Experience
                         </button>
@@ -625,7 +675,7 @@ const Profile = () => {
                   {isEditing && (
                     <button
                       onClick={addEducation}
-                      className="flex items-center text-sm text-[#024870] dark:text-[#6bd3f3] hover:underline"
+                      className="flex items-center text-sm text-[#024870] dark:text-[#6bd3f3] hover:underline focus:outline-none"
                     >
                       <FaGraduationCap className="mr-1" /> Add Education
                     </button>
@@ -693,7 +743,7 @@ const Profile = () => {
                         </div>
                         <button
                           onClick={() => removeEducation(index)}
-                          className="mt-2 text-sm text-red-500 hover:text-red-700"
+                          className="mt-2 text-sm text-red-500 hover:text-red-700 focus:outline-none"
                         >
                           Remove Education
                         </button>
@@ -737,13 +787,14 @@ const Profile = () => {
         </div>
       </div>
 
+      {/* Save/Cancel Buttons (when editing) */}
       {isEditing && (
         <div className="fixed bottom-6 right-6 bg-white dark:bg-gray-800 shadow-xl rounded-lg p-4 border border-gray-200 dark:border-gray-700 z-10">
           <div className="flex gap-3">
             <button
               onClick={handleSave}
               disabled={updating}
-              className="px-4 py-2 bg-[#024870] text-white rounded hover:bg-[#013456] disabled:opacity-70 flex items-center"
+              className="px-4 py-2 bg-[#024870] text-white rounded hover:bg-[#013456] disabled:opacity-70 flex items-center focus:outline-none focus:ring-2 focus:ring-[#024870] focus:ring-offset-2 dark:focus:ring-offset-gray-800"
             >
               {updating ? (
                 <>
@@ -776,6 +827,7 @@ const Profile = () => {
             <button
               onClick={() => {
                 setIsEditing(false);
+                // Reset to original user data
                 setEditData({
                   displayName: user.displayName || "",
                   email: user.email || "",
@@ -795,7 +847,7 @@ const Profile = () => {
                   currentPosition: user.currentPosition || "",
                 });
               }}
-              className="px-4 py-2 border rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+              className="px-4 py-2 border rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
             >
               Cancel
             </button>
@@ -806,6 +858,7 @@ const Profile = () => {
   );
 };
 
+// Reusable Input Component
 const Input = ({
   name,
   label,
@@ -815,35 +868,45 @@ const Input = ({
   type = "text",
 }) => (
   <div>
-    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+    <label
+      htmlFor={name}
+      className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+    >
       {label}
     </label>
     <input
       type={type}
+      id={name}
       name={name}
       value={value}
       onChange={onChange}
       disabled={disabled}
-      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-[#024870] focus:border-[#024870] dark:focus:ring-[#6bd3f3] dark:focus:border-[#6bd3f3] transition"
+      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-[#024870] focus:border-[#024870] dark:focus:ring-[#6bd3f3] dark:focus:border-[#6bd3f3] transition focus:outline-none"
     />
   </div>
 );
 
+// Reusable Textarea Component
 const Textarea = ({ name, label, value, onChange }) => (
   <div>
-    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+    <label
+      htmlFor={name}
+      className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+    >
       {label}
     </label>
     <textarea
+      id={name}
       name={name}
       value={value}
       onChange={onChange}
       rows="4"
-      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-[#024870] focus:border-[#024870] dark:focus:ring-[#6bd3f3] dark:focus:border-[#6bd3f3] transition"
+      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-[#024870] focus:border-[#024870] dark:focus:ring-[#6bd3f3] dark:focus:border-[#6bd3f3] transition focus:outline-none"
     />
   </div>
 );
 
+// Reusable Detail Component
 const Detail = ({ icon, value }) => (
   <div className="flex items-center">
     <span className="text-[#024870] dark:text-[#6bd3f3] mr-3 w-5 h-5 flex-shrink-0">
@@ -853,12 +916,14 @@ const Detail = ({ icon, value }) => (
   </div>
 );
 
+// Reusable SocialLink Component
 const SocialLink = ({ icon, platform, url }) => (
   <a
     href={url}
     target="_blank"
     rel="noopener noreferrer"
     className="flex items-center text-gray-700 dark:text-gray-300 hover:text-[#024870] dark:hover:text-[#6bd3f3] transition-colors"
+    aria-label={`${platform} profile`}
   >
     <span className="mr-3 w-5 h-5 flex-shrink-0">{icon}</span>
     <span className="truncate">{platform}</span>
