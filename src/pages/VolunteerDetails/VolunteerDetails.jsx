@@ -97,7 +97,7 @@ const VolunteerDetails = () => {
         animate={{ opacity: 1 }}
       >
         <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-bold mb-4">Opportunity Not Found</h2>
+          <h2 className="text-2xl font-bold mb-4">Not Found</h2>
           <p className="mb-6 max-w-md mx-auto">
             The volunteer opportunity you're looking for doesn't exist or may
             have been removed.
